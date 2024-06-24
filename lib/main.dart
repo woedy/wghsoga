@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wghsoga_app/Onboarding/onboarding.dart';
 import 'package:wghsoga_app/theme.dart';
 
 import 'SplashScreen/spalsh_screen.dart';
@@ -62,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
         future: _user_api,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
 
-          return  SplashScreen();
+          return  Onboarding();
           //return api_key == null ? SplashScreen() : HomeScreen();
           //return ServiceDetails(service_id: 'SER-2342',service_name: "Welo Bello", service_rating: "4.8", shop_location: "Accra", open: true, service_price: "\$ 2,345", service_photo: "null",);
 
