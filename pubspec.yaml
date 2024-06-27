@@ -36,6 +36,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   shared_preferences:
+  country_picker:
+  pin_code_text_field:
 
 dev_dependencies:
   flutter_test:
@@ -99,7 +101,11 @@ flutter_icons:
         - asset: assets/fonts/Montserrat-Medium.ttf
           weight: 500
 
-
+    - family: Georama
+      fonts:
+        - asset: assets/fonts/Georama-Regular.ttf
+        - asset: assets/fonts/Georama-Italic.ttf
+          style: italic
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
