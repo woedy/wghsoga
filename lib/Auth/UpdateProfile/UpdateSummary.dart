@@ -108,13 +108,14 @@ class _UpdateSummaryState extends State<UpdateSummary> {
 
                     Expanded(
                       child: Container(
-
+                        //color: Colors.red,
+                        //padding: EdgeInsets.only(top: 100), // Adjust the top padding to create space
                         child: Stack(
                           children: [
                             Container(
                               padding: EdgeInsets.all(20),
-                              margin: EdgeInsets.all(20),
-                              height: MediaQuery.of(context).size.height,
+                              margin: EdgeInsets.only(top: 90, left: 20, right: 20, bottom: 0),
+                              height: MediaQuery.of(context).size.height - 100, // Adjust the height to account for the top padding
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(15),
@@ -129,30 +130,33 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                       ),
                                       Column(
                                         children: [
-                                          Text('Nyahan Joana Davis', style: TextStyle(height:1, color: wesWhite, fontSize: 26, fontFamily: 'Montserrat', fontWeight: FontWeight.w400),),
+                                          Text('Nyahan Joana Davis', style: TextStyle(height: 1, color: wesWhite, fontSize: 26, fontFamily: 'Montserrat', fontWeight: FontWeight.w400),),
                                           SizedBox(
                                             height: 5,
                                           ),
-                                          Text('nyahandavis@gmail.com', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                                          Text('nyahandavis@gmail.com', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
                                           SizedBox(
                                             height: 5,
                                           ),
-                                          Text('June 2005', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                                          Text('June 2005', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
                                           SizedBox(
                                             height: 5,
                                           ),
-                                          Text('St. Wesley House', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                                          Text('St. Wesley House', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
                                         ],
                                       ),
 
+                                      SizedBox(
+                                        height: 20,
+                                      ),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text('Bio', style: TextStyle(height:1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
+                                          Text('Bio', style: TextStyle(height: 1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
                                           SizedBox(
-                                            height: 5,
+                                            height: 15,
                                           ),
-                                          Text('Ipsum morbi euismod posuere nostra nullam egestas mollis nibh conubia habitasse curabitur.', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                                          Text('Ipsum morbi euismod posuere nostra nullam egestas mollis nibh conubia habitasse curabitur.', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
                                           SizedBox(
                                             height: 5,
                                           ),
@@ -161,24 +165,23 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                       SizedBox(
                                         height: 20,
                                       ),
-
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text('Interests', style: TextStyle(height:1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
+                                          Text('Interests', style: TextStyle(height: 1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
                                           SizedBox(
-                                            height: 5,
+                                            height: 15,
                                           ),
                                           Wrap(
                                             children: [
                                               Container(
-                                                padding: EdgeInsets.all(15),
+                                                padding: EdgeInsets.all(10),
                                                 decoration: BoxDecoration(
                                                   color: wesYellow,
                                                   borderRadius: BorderRadius.circular(10),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black.withOpacity(0.4),
+                                                      color: Colors.black.withOpacity(0.1),
                                                       blurRadius: 2,
                                                       offset: Offset(2, 4), // Shadow position
                                                     ),
@@ -195,22 +198,20 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                           ),
                                         ],
                                       ),
-
                                       SizedBox(
                                         height: 20,
                                       ),
-
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text('General', style: TextStyle(height:1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
+                                          Text('General', style: TextStyle(height: 1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
                                           SizedBox(
-                                            height: 5,
+                                            height: 15,
                                           ),
                                           Row(
                                             children: [
-                                              Expanded(child: Text('Profession', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w600),)),
-                                              Expanded(child: Text('Business', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),)),
+                                              Expanded(child: Text('Profession', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w600),)),
+                                              Expanded(child: Text('Business', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),)),
                                             ],
                                           ),
                                           SizedBox(
@@ -221,11 +222,10 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                       SizedBox(
                                         height: 20,
                                       ),
-
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text('Social Media', style: TextStyle(height:1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
+                                          Text('Social Media', style: TextStyle(height: 1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
                                           SizedBox(
                                             height: 15,
                                           ),
@@ -235,20 +235,19 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text('www.nyahandavis.com', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                                              Text('www.nyahandavis.com', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
                                             ],
                                           ),
                                           SizedBox(
                                             height: 10,
                                           ),
-
-                                          Row (
+                                          Row(
                                             children: [
                                               Image(image: AssetImage('assets/icons/linkedin.png')),
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text('www.nyahandavis.com', style: TextStyle(height:1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                                              Text('www.nyahandavis.com', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
                                             ],
                                           ),
                                           SizedBox(
@@ -268,11 +267,10 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                 width: 160,
                                 child: Stack(
                                   children: [
-
                                     Positioned(
-                                      top: -72.5, // Half the height of the image to center it with the top of the yellow container
-                                      left: 7.5,
-                                      right: 7.5,
+                                      top: 0,
+                                      left: 0,
+                                      right: 0,
                                       child: Stack(
                                         children: [
                                           Container(
@@ -290,27 +288,30 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                               ],
                                             ),
                                           ),
-                                          Container(
-                                            height: 145,
-                                            width: 145,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              image: DecorationImage(
-                                                image: AssetImage('assets/images/nyahan.png'),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius: BorderRadius.circular(500),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black.withOpacity(0.4),
-                                                  blurRadius: 2,
-                                                  offset: Offset(2, 4), // Shadow position
+                                          Positioned(
+                                            top: 0,
+                                            left: 7.5,
+                                            right: 7.5,
+                                            child: Container(
+                                              height: 145,
+                                              width: 145,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                image: DecorationImage(
+                                                  image: AssetImage('assets/images/nyahan.png'),
+                                                  fit: BoxFit.cover,
                                                 ),
-                                              ],
+                                                borderRadius: BorderRadius.circular(500),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.4),
+                                                    blurRadius: 2,
+                                                    offset: Offset(2, 4), // Shadow position
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-
-
                                         ],
                                       ),
                                     ),
@@ -322,6 +323,7 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                         ),
                       ),
                     ),
+
 
                   ],
                 ),

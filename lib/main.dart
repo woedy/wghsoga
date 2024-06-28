@@ -18,6 +18,7 @@ import 'Auth/UpdateProfile/UpdateMoreInfo.dart';
 import 'Auth/UpdateProfile/UpdateOption.dart';
 import 'Auth/UpdateProfile/UpdateSocialMedia.dart';
 import 'Auth/UpdateProfile/UpdateSummary.dart';
+import 'Homepage/Homepage.dart';
 import 'SplashScreen/spalsh_screen.dart';
 import 'constants.dart';
 
@@ -76,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
         future: _user_api,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
 
-          return  UpdateSummary();
+          return  HomepageScreen();
           //return api_key == null ? SplashScreen() : HomeScreen();
           //return ServiceDetails(service_id: 'SER-2342',service_name: "Welo Bello", service_rating: "4.8", shop_location: "Accra", open: true, service_price: "\$ 2,345", service_photo: "null",);
 
