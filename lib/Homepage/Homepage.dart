@@ -6,6 +6,7 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:wghsoga_app/constants.dart';
 
 import '../../Components/keyboard_utils.dart';
+import '../Components/stoke_text.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -110,11 +111,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     ),
                                     Positioned(
                                       top: 0,
-                                      left: 7.5,
-                                      right: 7.5,
+                                      left: 0,
+                                      right: 0,
                                       child: Container(
-                                        height: 62,
-                                        width: 62,
+                                        height: 60,
+                                        width: 60,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           image: DecorationImage(
@@ -726,49 +727,3 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
 }
 
-
-
-class StrokedText extends StatelessWidget {
-  final String text;
-  final double strokeWidth;
-  final Color strokeColor;
-  final Color textColor;
-  final double fontSize;
-
-  StrokedText({
-    required this.text,
-    required this.strokeWidth,
-    required this.strokeColor,
-    required this.textColor,
-    required this.fontSize,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        // Stroked text as the first layer
-        Text(
-          text,
-          style: TextStyle(
-            height: 1,
-            fontSize: fontSize,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = strokeWidth
-              ..color = strokeColor,
-          ),
-        ),
-        // Regular text as the second layer
-        Text(
-          text,
-          style: TextStyle(
-            height: 1,
-            fontSize: fontSize,
-            color: textColor,
-          ),
-        ),
-      ],
-    );
-  }
-}

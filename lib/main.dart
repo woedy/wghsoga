@@ -8,8 +8,12 @@ import 'package:wghsoga_app/Auth/UpdateProfile/UpdateBio.dart';
 import 'package:wghsoga_app/Auth/UpdateProfile/UpdateInterests.dart';
 import 'package:wghsoga_app/Auth/UpdateProfile/UpdatePhoto.dart';
 import 'package:wghsoga_app/Onboarding/onboarding.dart';
+import 'package:wghsoga_app/Shop/ShopDetails.dart';
 import 'package:wghsoga_app/theme.dart';
 
+import 'All Users/AllUsers.dart';
+import 'All Users/UserDetails.dart';
+import 'All Users/chat/single_chat.dart';
 import 'Auth/Register/Regsiter1.dart';
 import 'Auth/Register/Regsiter2.dart';
 import 'Auth/Register/Regsiter3.dart';
@@ -18,7 +22,15 @@ import 'Auth/UpdateProfile/UpdateMoreInfo.dart';
 import 'Auth/UpdateProfile/UpdateOption.dart';
 import 'Auth/UpdateProfile/UpdateSocialMedia.dart';
 import 'Auth/UpdateProfile/UpdateSummary.dart';
+import 'Events/AllEvents.dart';
+import 'Events/EventDetails.dart';
 import 'Homepage/Homepage.dart';
+import 'News/AllNews.dart';
+import 'News/NewDetails.dart';
+import 'PayDues/PayDuesScreen.dart';
+import 'Projects/AllProjects.dart';
+import 'Projects/ProjectDetails.dart';
+import 'Shop/Shop.dart';
 import 'SplashScreen/spalsh_screen.dart';
 import 'constants.dart';
 
@@ -77,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
         future: _user_api,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
 
-          return  HomepageScreen();
+          return  PayDuesScreen();
           //return api_key == null ? SplashScreen() : HomeScreen();
           //return ServiceDetails(service_id: 'SER-2342',service_name: "Welo Bello", service_rating: "4.8", shop_location: "Accra", open: true, service_price: "\$ 2,345", service_photo: "null",);
 
