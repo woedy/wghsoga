@@ -271,8 +271,7 @@ class _PayDuesScreenState extends State<PayDuesScreen> {
                                   children: [
                                     Text('Past Payments', style: TextStyle(height: 1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w700),),
 
-                                                 SizedBox(
-                                                   height: 20,
+                                                 SizedBox(                                                   height: 20,
                                                  )      ,
 
 
