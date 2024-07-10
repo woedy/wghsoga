@@ -13,8 +13,8 @@ const bodyText1 = Color(0xffffffff);
 const bodyText2 = Color(0xffffffff);
 
 
-//const hostName = "http://192.168.43.121:8000/";
-const hostName = "http://192.168.43.122:8000/";
+//const hostName = "http://192.168.43.121:8000";
+const hostName = "http://192.168.43.122:8000";
 
 
 

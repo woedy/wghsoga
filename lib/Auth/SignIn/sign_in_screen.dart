@@ -19,7 +19,7 @@ import 'models/sign_in_model.dart';
 Future<SignInModel> signInUser(String email, String password) async {
 
   final response = await http.post(
-    Uri.parse(hostName + "api/accounts/login-user/"),
+    Uri.parse(hostName + "/api/accounts/login-user/"),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json'

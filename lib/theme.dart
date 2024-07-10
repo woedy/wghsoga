@@ -15,8 +15,8 @@ ThemeData theme() {
 
 TextTheme textTheme() {
   return const TextTheme(
-    bodyLarge: TextStyle(color: Colors.black),
-    bodyMedium: TextStyle(color: Colors.black),
+    bodyLarge: TextStyle(color: wesWhite),
+    bodyMedium: TextStyle(color: wesWhite),
   );
 }
 

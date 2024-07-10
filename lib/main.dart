@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wghsoga_app/All%20Users/AllUsers.dart';
 import 'package:wghsoga_app/Auth/SignIn/sign_in_screen.dart';
 
 import 'package:wghsoga_app/theme.dart';
@@ -65,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         future: _user_api,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
 
-          return  SignInScreen();
+          return  AllUsersScreen();
           //return api_key == null ? SplashScreen() : HomeScreen();
           //return ServiceDetails(service_id: 'SER-2342',service_name: "Welo Bello", service_rating: "4.8", shop_location: "Accra", open: true, service_price: "\$ 2,345", service_photo: "null",);
 
