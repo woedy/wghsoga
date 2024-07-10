@@ -12,9 +12,9 @@ const wesWhite = Color(0xffffffff);
 const bodyText1 = Color(0xffffffff);
 const bodyText2 = Color(0xffffffff);
 
-const hostName = "https://api.rentstraight.zuludesks.com/api/";
-const hostNameMedia = "https://api.rentstraight.zuludesks.com";
 
+//const hostName = "http://192.168.43.121:8000/";
+const hostName = "http://192.168.43.122:8000/";
 
 
 

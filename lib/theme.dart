@@ -4,7 +4,7 @@ import 'package:wghsoga_app/constants.dart';
 
 ThemeData theme() {
   return ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: wesGreen,
     fontFamily: 'Montserrat',
     appBarTheme: appBarTheme(),
     textTheme: textTheme(),
@@ -22,7 +22,7 @@ TextTheme textTheme() {
 
 AppBarTheme appBarTheme() {
   return AppBarTheme(
-    color: wesWhite
+    color: wesGreen
       ,
     elevation: 0
   );
