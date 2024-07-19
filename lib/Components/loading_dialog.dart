@@ -59,7 +59,7 @@ class _LoadingDialogBoxState extends State<LoadingDialogBox>
                 SizedBox(height: 20),
                 Text(
                   widget.text,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ],
             ),

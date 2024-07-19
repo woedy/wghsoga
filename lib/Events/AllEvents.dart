@@ -1,12 +1,52 @@
 
-import 'package:country_picker/country_picker.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:wghsoga_app/constants.dart';
 
-import '../../Components/keyboard_utils.dart';
 import '../Components/stoke_text.dart';
+import 'package:http/http.dart' as http;
+
+
+
+Future<AllEventsModel> get_all_events() async {
+
+  var token = await getApiPref();
+
+  final response = await http.get(
+    Uri.parse(hostName + "/api/events/get-all-events/"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Token '  + token.toString()
+    },
+  );
+
+
+  if (response.statusCode == 200) {
+    print(jsonDecode(response.body));
+    final result = json.decode(response.body);
+    if (result != null) {
+
+      //////////////////////////////
+      // Store all Events data ////
+      //////////////////////////////
+
+    }
+    return AllEventsModel.fromJson(jsonDecode(response.body));
+  } else if (
+  response.statusCode == 422 ||
+      response.statusCode == 403 ||
+      response.statusCode == 400
+  ) {
+    print(jsonDecode(response.body));
+    return AllEventsModel.fromJson(jsonDecode(response.body));
+  }   else {
+
+    throw Exception('Failed to load data');
+  }
+}
+
 
 class AllEvents extends StatefulWidget {
   const AllEvents({super.key});
@@ -17,20 +57,22 @@ class AllEvents extends StatefulWidget {
 
 class _AllEventsState extends State<AllEvents> {
 
-  final _formKey = GlobalKey<FormState>();
 
 
-  List<FocusNode>? _focusNodes;
-
-  TextEditingController controller = TextEditingController(text: "");
-  bool hasError = false;
-  String email_token = "";
+  Future<AllEventsModel>? _futureAllEvents;
 
 
 
 
   @override
   Widget build(BuildContext context) {
+    return (_futureAllEvents == null) ? buildColumn() : buildFutureBuilder();
+  }
+
+
+
+
+  buildColumn() {
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,

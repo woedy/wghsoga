@@ -5,8 +5,8 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:wghsoga_app/All%20Users/UserDetails.dart';
-import 'package:wghsoga_app/All%20Users/models/all_users_model.dart';
+import 'package:wghsoga_app/AllUsers/UserDetails.dart';
+import 'package:wghsoga_app/AllUsers/models/all_users_model.dart';
 import 'package:wghsoga_app/Components/loading_dialog.dart';
 import 'package:wghsoga_app/constants.dart';
 
