@@ -20,7 +20,9 @@ Future<UserDetailModel> get_user_detail(user_id) async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization': 'Token '  + token.toString()
+      'Authorization': 'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+
+      //'Authorization': 'Token '  + token.toString()
     },
   );
 

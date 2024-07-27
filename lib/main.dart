@@ -65,10 +65,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return FutureBuilder(
         future: _user_api,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return  AllUsersScreen();
+          //return  SplashScreen();
 
-          //return  AllUsersScreen();
-          //return  AllProjects();
-          return api_key == null ? SplashScreen() : HomepageScreen();
+          //
+          //return api_key == null ? SplashScreen() : HomepageScreen();
           //return ServiceDetails(service_id: 'SER-2342',service_name: "Welo Bello", service_rating: "4.8", shop_location: "Accra", open: true, service_price: "\$ 2,345", service_photo: "null",);
 
         });

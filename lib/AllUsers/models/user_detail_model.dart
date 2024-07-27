@@ -1,4 +1,3 @@
-
 class UserDetailModel {
   String? message;
   Data? data;
@@ -47,8 +46,8 @@ class Data {
   bool? verified;
   bool? isArchived;
   String? locationName;
-  double? lat;
-  double? lng;
+  String? lat;
+  String? lng;
   bool? isActive;
   bool? staff;
   bool? admin;
@@ -185,7 +184,7 @@ class UserProfile {
   String? createdAt;
   String? updatedAt;
   int? user;
-  String? room;
+  int? room;
 
   UserProfile(
       {this.id,

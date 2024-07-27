@@ -1,57 +1,41 @@
-
 import 'dart:convert';
-
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:wghsoga_app/AllUsers/UserDetails.dart';
 import 'package:wghsoga_app/AllUsers/models/all_users_model.dart';
-import 'package:wghsoga_app/Components/loading_dialog.dart';
 import 'package:wghsoga_app/constants.dart';
-
 import 'package:http/http.dart' as http;
 
-Future<AllUsersModel> get_all_users() async {
-
+Future<AllUsersModel> get_all_users({int page = 1, Map<String, String>? filters, String? search_query}) async {
   var token = await getApiPref();
 
+  // Construct the query parameters from the filters map
+  String filterQuery = '';
+  if (filters != null) {
+    filters.forEach((key, value) {
+      filterQuery += '&$key=$value';
+    });
+  }
+
+  final String url = hostName + '/api/accounts/get-all-users/?search=${search_query ?? ''}&page=$page$filterQuery';
+
   final response = await http.get(
-    Uri.parse(hostName + "/api/accounts/get-all-users/"),
+    Uri.parse(url),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization': 'Token '  + token.toString()
-    },
+      'Authorization': 'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+  //'Authorization': 'Token '  + token.toString()
+
+  },
   );
 
-
   if (response.statusCode == 200) {
-    print(jsonDecode(response.body));
-    final result = json.decode(response.body);
-    if (result != null) {
-
-      //////////////////////////////
-      // Store all users data ////
-      //////////////////////////////
-
-    }
     return AllUsersModel.fromJson(jsonDecode(response.body));
-  } else if (
-      response.statusCode == 422 ||
-      response.statusCode == 403 ||
-      response.statusCode == 400
-  ) {
-    print(jsonDecode(response.body));
-    return AllUsersModel.fromJson(jsonDecode(response.body));
-  }   else {
-
+  } else {
     throw Exception('Failed to load data');
   }
 }
-
-
-
 
 class AllUsersScreen extends StatefulWidget {
   const AllUsersScreen({super.key});
@@ -61,634 +45,438 @@ class AllUsersScreen extends StatefulWidget {
 }
 
 class _AllUsersScreenState extends State<AllUsersScreen> {
+  Future<AllUsersModel?>? _futureAllUsers;
+  List<Users> _allUsers = [];
+  bool _isLoading = false;
+  int _currentPage = 1;
+  int _totalPages = 1;
+  Map<String, String>? _filters;
+  String? _searchQuery;
 
 
-  Future<AllUsersModel>? _futureAllUsers;
+  Future<AllUsersModel?> _fetchUsers({bool loadMore = false}) async {
+    if (_isLoading) return Future.error('Loading in progress');
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final usersData = await get_all_users(
+        page: loadMore ? _currentPage + 1 : 1,
+        filters: _filters,
+        search_query: _searchQuery,
+      );
+
+      setState(() {
+        if (loadMore) {
+          _allUsers.addAll(usersData.data!.users!);
+          _currentPage++;
+        } else {
+          _allUsers = usersData.data!.users!;
+          _currentPage = 1;
+        }
+        _totalPages = usersData.data!.pagination!.totalPages!;
+        _isLoading = false;
+      });
+
+      if (_allUsers.isEmpty) {
+        return null; // Return null when no users are available
+      }
+
+      return usersData;
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      return Future.error('Failed to load data');
+    }
+  }
+
 
   @override
   void initState() {
-    _futureAllUsers = get_all_users();
     super.initState();
+    _futureAllUsers = _fetchUsers();
   }
-
 
 
   @override
   Widget build(BuildContext context) {
-    return (_futureAllUsers == null) ? buildColumn() : buildFutureBuilder();
-  }
-
-  buildColumn() {
     return Scaffold(
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                    image: AssetImage('assets/images/wes_back2.png'),
-                  fit: BoxFit.cover
-              )
-          ),
-          child: SafeArea(
-
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: wesGreen,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.4),
-                                blurRadius: 2,
-                                offset: Offset(2, 4), // Shadow position
-                              ),
-                            ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: (){
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: wesGreen,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            blurRadius: 2,
+                            offset: Offset(2, 4), // Shadow position
                           ),
-                          child: Center(
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: wesYellow,
-                            ),
-                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: wesYellow,
                         ),
                       ),
-                      Text('All Registered Old Girls', style: TextStyle(height: 1, color: wesWhite, fontSize: 18, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                    ),
+                  ),
+                  Text('All Registered Old Girls', style: TextStyle(height: 1, color: wesWhite, fontSize: 18, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                  Row(
+                    children: [
                       Image(
                         height: 50,
-                        image: AssetImage('assets/images/group_chat.png',), color: Colors.blue,),
-                      Text('Filter', style: TextStyle(height: 1, color: wesYellow, fontSize: 15, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
-
-                    ],
-                  ),
-                ),
-
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Colors.red
-                  ),
-                    child: Center(child: Text('Currently Offline'))),
-
-                Expanded(child: Container(
-                  margin: EdgeInsets.all(10),
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index){
-                      return  InkWell(
-                        onTap: (){
-
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.only(bottom: 3),
-                          decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    height: 100,
-
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          height: 100,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: wesYellow,
-                                            borderRadius: BorderRadius.circular(20),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.2),
-                                                blurRadius: 2,
-                                                offset: Offset(2, 4), // Shadow position
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 0,
-                                          left: 1,
-                                          right: 1,
-                                          child: Container(
-                                            height: 95,
-                                            width: 95,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              image: DecorationImage(
-                                                image: AssetImage('assets/images/nyahan.png'),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius: BorderRadius.circular(20),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black.withOpacity(0.2),
-                                                  blurRadius: 2,
-                                                  offset: Offset(2, 4), // Shadow position
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Sandra Bonsu Demi', style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w600),),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text('sandrabonsu@gmail.com', style: TextStyle(height: 1, color: wesYellow, fontSize: 15, fontFamily: 'Montserrat',),),
-
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text('St. Parks House', style: TextStyle(height: 1, color: wesYellow, fontSize: 14, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
-                                              ],
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-
-                              Text('View Details', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat'),),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-
-                  ),
-                )),
-
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-
-                  decoration: BoxDecoration(
-                    color: wesGreen,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
+                        image: AssetImage('assets/images/group_chat.png',), color: Colors.white,),
+                      IconButton(
+                        icon: Icon(Icons.filter_list, color: Colors.white,),
+                        onPressed: _showFilterBottomSheet,
                       ),
                     ],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
-                      */  },
-                        child: Column(
-                          children: [
-                            Icon(Icons.home, color: wesYellow,),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('Home', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.shopping_cart, color: wesYellow,),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('Shop', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
-
-
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.money, color: wesYellow,),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('Pay Dues', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                          ],
-                        ),
-                      ),
-
-                      InkWell(
-                        onTap: (){
-
-                          //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
-
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.settings, color: wesYellow,),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('Settings', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-
-                          ],
-                        ),
-                      ),
-
-                      InkWell(
-                        onTap: (){
-
-                          //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
-
-                        },
-                        child: Column(
-                          children: [
-
-                            Icon(Icons.account_circle, color: wesYellow,),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('Settings', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                          ],
-                        ),
-                      ),
-
-
-                    ],
-                  ),
-                )
-
-              ],
+                ],
+              ),
             ),
-          ),
-        )
-    );
-  }
 
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                    labelText: 'Search', labelStyle: TextStyle(color: Colors.white),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: wesWhite)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: wesWhite)),
+                ),
+                style: TextStyle(color: wesWhite),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                    _currentPage = 1;
+                  });
+                  _applyFilters();
+                },
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder<AllUsersModel?>(
+                future: _futureAllUsers,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || _allUsers.isEmpty) {
+                    return Center(child: Text('No users available'));
+                  } else {
+                    final allUsers = snapshot.data!.data!.users!;
+                    return NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollInfo) {
+                        if (!_isLoading && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+                          if (_currentPage < _totalPages) {
+                            _fetchUsers(loadMore: true);
+                          }
+                          return true;
+                        }
+                        return false;
+                      },
+                      child: ListView.builder(
+                        itemCount: allUsers.length + (_isLoading ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == allUsers.length) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          return InkWell(
+                            onTap: (){
 
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => UserDetailScreen(user_id: allUsers[index].userId.toString()))
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.only(bottom: 3),
+                              decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        height: 100,
 
-
-  FutureBuilder<AllUsersModel> buildFutureBuilder() {
-    return FutureBuilder<AllUsersModel>(
-        future: _futureAllUsers,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingDialogBox(text: 'Please Wait..',);
-          }
-          else if(snapshot.hasData) {
-
-            var data = snapshot.data!;
-
-            var all_users = data.data!.users!;
-
-            if(data.message == "Successful") {
-              return Scaffold(
-                  body: Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('assets/images/wes_back2.png'),
-                            fit: BoxFit.cover
-                        )
-                    ),
-                    child: SafeArea(
-
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                  onTap: (){
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                      color: wesGreen,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.4),
-                                          blurRadius: 2,
-                                          offset: Offset(2, 4), // Shadow position
-                                        ),
-                                      ],
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.arrow_back,
-                                        color: wesYellow,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Text('All Registered Old Girls', style: TextStyle(height: 1, color: wesWhite, fontSize: 18, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-                                Image(
-                                  height: 50,
-                                  image: AssetImage('assets/images/group_chat.png',), color: Colors.blue,),
-                                Text('Filter', style: TextStyle(height: 1, color: wesYellow, fontSize: 15, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
-
-                              ],
-                            ),
-                          ),
-
-
-
-                          Expanded(child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: ListView.builder(
-                              itemCount: all_users.length,
-                              itemBuilder: (context, index){
-                                return  InkWell(
-                                  onTap: (){
-
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) => UserDetailScreen(user_id: all_users[index].userId.toString()))
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 3),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                        child: Stack(
                                           children: [
                                             Container(
-                                              width: 100,
                                               height: 100,
-
-                                              child: Stack(
-                                                children: [
-                                                  Container(
-                                                    height: 100,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                      color: wesYellow,
-                                                      borderRadius: BorderRadius.circular(20),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.black.withOpacity(0.2),
-                                                          blurRadius: 2,
-                                                          offset: Offset(2, 4), // Shadow position
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    top: 0,
-                                                    left: 1,
-                                                    right: 1,
-                                                    child: Container(
-                                                      height: 95,
-                                                      width: 95,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        image: DecorationImage(
-                                                          image: NetworkImage(hostName + all_users[index].photo!.toString()),
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                        borderRadius: BorderRadius.circular(20),
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.black.withOpacity(0.2),
-                                                            blurRadius: 2,
-                                                            offset: Offset(2, 4), // Shadow position
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                color: wesYellow,
+                                                borderRadius: BorderRadius.circular(20),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.2),
+                                                    blurRadius: 2,
+                                                    offset: Offset(2, 4), // Shadow position
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(
-                                                            all_users[index].firstName.toString() + " " +
-                                                                all_users[index].middleName.toString() + " " +
-                                                                all_users[index].lastName.toString()
-                                                            , style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w600),),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(all_users[index].email!.toString() , style: TextStyle(height: 1, color: wesYellow, fontSize: 15, fontFamily: 'Montserrat',),),
-
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(all_users[index].userProfile!.house.toString(), style: TextStyle(height: 1, color: wesYellow, fontSize: 14, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
-                                                        ],
-                                                      ),
+                                            Positioned(
+                                              top: 0,
+                                              left: 1,
+                                              right: 1,
+                                              child: Container(
+                                                height: 95,
+                                                width: 95,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(hostName + allUsers[index].photo!.toString()),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.black.withOpacity(0.2),
+                                                      blurRadius: 2,
+                                                      offset: Offset(2, 4), // Shadow position
                                                     ),
-
                                                   ],
                                                 ),
                                               ),
                                             ),
-
                                           ],
                                         ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                              (allUsers[index].firstName  ?? "") + " " +
+                                                  (allUsers[index].middleName ?? "") + " " +
+                                                  (allUsers[index].lastName ?? "")
+                                                      , style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w600),),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(allUsers[index].email!.toString() , style: TextStyle(height: 1, color: wesYellow, fontSize: 15, fontFamily: 'Montserrat',),),
 
-                                        Text('View Details', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat'),),
-                                      ],
-                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(allUsers[index].userProfile!.house ?? "", style: TextStyle(height: 1, color: wesYellow, fontSize: 14, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
+                                                  ],
+                                                ),
+                                              ),
+
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
                                   ),
-                                );
-                              },
 
+                                  Text('View Details', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat'),),
+                                ],
+                              ),
                             ),
-                          )),
-
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-
-                            decoration: BoxDecoration(
-                              color: wesGreen,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 3), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              //crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                InkWell(
-                                  onTap: (){
-                                    /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
-                      */  },
-                                  child: Column(
-                                    children: [
-                                      Icon(Icons.home, color: wesYellow,),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text('Home', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: (){
-                                    //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(Icons.shopping_cart, color: wesYellow,),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text('Shop', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: (){
-                                    // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
-
-
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(Icons.money, color: wesYellow,),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text('Pay Dues', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                                    ],
-                                  ),
-                                ),
-
-                                InkWell(
-                                  onTap: (){
-
-                                    //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
-
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(Icons.settings, color: wesYellow,),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text('Settings', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-
-                                    ],
-                                  ),
-                                ),
-
-                                InkWell(
-                                  onTap: (){
-
-                                    //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
-
-                                  },
-                                  child: Column(
-                                    children: [
-
-                                      Icon(Icons.account_circle, color: wesYellow,),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text('Settings', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                                    ],
-                                  ),
-                                ),
-
-
-                              ],
-                            ),
-                          )
-
-                        ],
+                          );
+                        },
                       ),
-                    ),
-                  )
-              );
-            }
-
-
-
-          }
-
-          return LoadingDialogBox(text: 'Please Wait..',);
-
-
-        }
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
 
-  void dispose() {
-    super.dispose();
+  void _applyFilters() {
+    setState(() {
+      _futureAllUsers = _fetchUsers();
+    });
   }
 
+  void _resetFilters() {
+    setState(() {
+      _filters = null;  // Reset filters
+      _searchQuery = null;
+      _currentPage = 1;
+      _futureAllUsers = _fetchUsers();
+    });
+  }
+
+  void _showFilterBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Filters',
+                    style: TextStyle(
+                      color: wesGreen,
+                      fontSize: 18
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: DropdownButton<String>(
+                      hint: Text("Select Year Group"),
+                      value: _filters?['year_group'],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _filters = _filters ?? {};
+                          _filters!['year_group'] = newValue ?? '';
+                        });
+                      },
+                      items: <String>['2020', '2021', '2022', '2023']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+
+                  Container(
+                   // padding: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      //color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                            color: Colors.white.withOpacity(0.1))),
+                    child: TextFormField(
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        //hintText: 'Enter Username/Email',
+
+                        hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.normal),
+                        labelText: "City",
+                        labelStyle:
+                        TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5), fontWeight: FontWeight.w600),
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: wesWhite)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: wesWhite)),
+                        border: InputBorder.none,),
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(225),
+                        PasteTextInputFormatter(),
+                      ],
+                      textInputAction: TextInputAction.next,
+                      autofocus: false,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _filters = _filters ?? {};
+                            _filters!['city'] = newValue ?? '';
+                          });
+                        },
+                      onSaved: (value) {
+                        setState(() {
+                          //first_name = value;
+                        });
+                      },
+                    ),
+                  ),
+
+                  SizedBox(height: 16),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+
+                    child: DropdownButton<String>(
+                      hint: Text("Select House"),
+                      value: _filters?['house'],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _filters = _filters ?? {};
+                          _filters!['house'] = newValue ?? '';
+                        });
+                      },
+                      items: <String>['House1', 'House2', 'House3']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _applyFilters();
+                        },
+                        child: Text('Apply Filters', style: TextStyle(color: wesGreen),),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _resetFilters();
+                        },
+                        child: Text('Reset Filters', style: TextStyle(color: wesWhite),),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red, // Change color to indicate reset action
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
 }

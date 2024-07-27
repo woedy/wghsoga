@@ -32,7 +32,7 @@ class _SuccessDialogBoxState extends State<SuccessDialogBox> {
               SizedBox(height: 30), // Spacer
               Text(widget.text,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15, color: Colors.black),
               ), // Text
             ],
           ),
