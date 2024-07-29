@@ -130,7 +130,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.arrow_back,
                           color: wesYellow,
@@ -141,7 +141,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                   Text('All Registered Old Girls', style: TextStyle(height: 1, color: wesWhite, fontSize: 18, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
                   Row(
                     children: [
-                      Image(
+                      const Image(
                         height: 50,
                         image: AssetImage('assets/images/group_chat.png',), color: Colors.white,),
                       IconButton(
@@ -157,7 +157,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Search', labelStyle: TextStyle(color: Colors.white),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: wesWhite)),

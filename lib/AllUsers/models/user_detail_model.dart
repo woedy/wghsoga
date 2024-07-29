@@ -22,8 +22,9 @@ class UserDetailModel {
 class Data {
   int? id;
   UserProfile? userProfile;
+  List<String>? userInterests;
   String? password;
-  String? lastLogin;
+  Null? lastLogin;
   String? userId;
   String? email;
   String? username;
@@ -32,12 +33,12 @@ class Data {
   String? lastName;
   String? phone;
   String? yearGroup;
-  String? fcmToken;
-  String? otpCode;
+  Null? fcmToken;
+  Null? otpCode;
   String? emailToken;
   bool? emailVerified;
   String? photo;
-  String? dob;
+  Null? dob;
   bool? maritalStatus;
   String? country;
   String? language;
@@ -45,9 +46,9 @@ class Data {
   bool? profileComplete;
   bool? verified;
   bool? isArchived;
-  String? locationName;
-  String? lat;
-  String? lng;
+  Null? locationName;
+  Null? lat;
+  Null? lng;
   bool? isActive;
   bool? staff;
   bool? admin;
@@ -56,6 +57,7 @@ class Data {
   Data(
       {this.id,
         this.userProfile,
+        this.userInterests,
         this.password,
         this.lastLogin,
         this.userId,
@@ -92,6 +94,7 @@ class Data {
     userProfile = json['user_profile'] != null
         ? new UserProfile.fromJson(json['user_profile'])
         : null;
+    userInterests = json['user_interests'].cast<String>();
     password = json['password'];
     lastLogin = json['last_login'];
     userId = json['user_id'];
@@ -130,6 +133,7 @@ class Data {
     if (this.userProfile != null) {
       data['user_profile'] = this.userProfile!.toJson();
     }
+    data['user_interests'] = this.userInterests;
     data['password'] = this.password;
     data['last_login'] = this.lastLogin;
     data['user_id'] = this.userId;

@@ -6,6 +6,41 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:wghsoga_app/constants.dart';
 
 import '../../Components/keyboard_utils.dart';
+import 'package:http/http.dart' as http;
+
+
+
+Future<AllProjectsModel> get_all_projects({int page = 1, Map<String, String>? filters, String? search_query}) async {
+  var token = await getApiPref();
+
+  // Construct the query parameters from the filters map
+  String filterQuery = '';
+  if (filters != null) {
+    filters.forEach((key, value) {
+      filterQuery += '&$key=$value';
+    });
+  }
+
+  final String url = hostName + '/api/accounts/get-all-users/?search=${search_query ?? ''}&page=$page$filterQuery';
+
+  final response = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+  //'Authorization': 'Token '  + token.toString()
+
+  },
+  );
+
+  if (response.statusCode == 200) {
+    return AllUsersModel.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
 
 class AllProjects extends StatefulWidget {
   const AllProjects({super.key});

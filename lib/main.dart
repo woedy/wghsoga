@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,14 +10,11 @@ import 'package:wghsoga_app/theme.dart';
 
 import 'constants.dart';
 
-
-
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((value) => {runApp(MyApp())});
 }
 
@@ -59,19 +55,17 @@ class _MyHomePageState extends State<MyHomePage> {
     _user_api = apiKey();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _user_api,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return  AllUsersScreen();
-          //return  SplashScreen();
+          return AllUsersScreen();
+          //return SplashScreen();
 
           //
           //return api_key == null ? SplashScreen() : HomepageScreen();
           //return ServiceDetails(service_id: 'SER-2342',service_name: "Welo Bello", service_rating: "4.8", shop_location: "Accra", open: true, service_price: "\$ 2,345", service_photo: "null",);
-
         });
   }
 
