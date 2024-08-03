@@ -1,10 +1,10 @@
-class ProjectDetailModel {
+class ProductDetailModel {
   String? message;
   Data? data;
 
-  ProjectDetailModel({this.message, this.data});
+  ProductDetailModel({this.message, this.data});
 
-  ProjectDetailModel.fromJson(Map<String, dynamic> json) {
+  ProductDetailModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
@@ -21,107 +21,115 @@ class ProjectDetailModel {
 
 class Data {
   int? id;
-  List<ProjectImages>? projectImages;
-  List<ProjectVideos>? projectVideos;
-  String? projectId;
-  String? title;
-  String? details;
-  String? target;
-  String? raised;
+  List<ProductImages>? productImages;
+  List<ProductVideos>? productVideos;
+  String? productId;
+  String? name;
+  String? description;
+  String? price;
+  int? stock;
+  bool? available;
   bool? isArchived;
   bool? active;
   String? createdAt;
   String? updatedAt;
+  int? category;
 
   Data(
       {this.id,
-      this.projectImages,
-      this.projectVideos,
-      this.projectId,
-      this.title,
-      this.details,
-      this.target,
-      this.raised,
+      this.productImages,
+      this.productVideos,
+      this.productId,
+      this.name,
+      this.description,
+      this.price,
+      this.stock,
+      this.available,
       this.isArchived,
       this.active,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.category});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if (json['project_images'] != null) {
-      projectImages = <ProjectImages>[];
-      json['project_images'].forEach((v) {
-        projectImages!.add(new ProjectImages.fromJson(v));
+    if (json['product_images'] != null) {
+      productImages = <ProductImages>[];
+      json['product_images'].forEach((v) {
+        productImages!.add(new ProductImages.fromJson(v));
       });
     }
-    if (json['project_videos'] != null) {
-      projectVideos = <ProjectVideos>[];
-      json['project_videos'].forEach((v) {
-        projectVideos!.add(new ProjectVideos.fromJson(v));
+    if (json['product_videos'] != null) {
+      productVideos = <ProductVideos>[];
+      json['product_videos'].forEach((v) {
+        productVideos!.add(new ProductVideos.fromJson(v));
       });
     }
-    projectId = json['project_id'];
-    title = json['title'];
-    details = json['details'];
-    target = json['target'];
-    raised = json['raised'];
+    productId = json['product_id'];
+    name = json['name'];
+    description = json['description'];
+    price = json['price'];
+    stock = json['stock'];
+    available = json['available'];
     isArchived = json['is_archived'];
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    category = json['category'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    if (this.projectImages != null) {
-      data['project_images'] =
-          this.projectImages!.map((v) => v.toJson()).toList();
+    if (this.productImages != null) {
+      data['product_images'] =
+          this.productImages!.map((v) => v.toJson()).toList();
     }
-    if (this.projectVideos != null) {
-      data['project_videos'] =
-          this.projectVideos!.map((v) => v.toJson()).toList();
+    if (this.productVideos != null) {
+      data['product_videos'] =
+          this.productVideos!.map((v) => v.toJson()).toList();
     }
-    data['project_id'] = this.projectId;
-    data['title'] = this.title;
-    data['details'] = this.details;
-    data['target'] = this.target;
-    data['raised'] = this.raised;
+    data['product_id'] = this.productId;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['price'] = this.price;
+    data['stock'] = this.stock;
+    data['available'] = this.available;
     data['is_archived'] = this.isArchived;
     data['active'] = this.active;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['category'] = this.category;
     return data;
   }
 }
 
-class ProjectImages {
+class ProductImages {
   int? id;
   String? image;
   bool? isArchived;
   bool? active;
   String? createdAt;
   String? updatedAt;
-  int? project;
+  int? product;
 
-  ProjectImages(
+  ProductImages(
       {this.id,
       this.image,
       this.isArchived,
       this.active,
       this.createdAt,
       this.updatedAt,
-      this.project});
+      this.product});
 
-  ProjectImages.fromJson(Map<String, dynamic> json) {
+  ProductImages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     image = json['image'];
     isArchived = json['is_archived'];
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    project = json['project'];
+    product = json['product'];
   }
 
   Map<String, dynamic> toJson() {
@@ -132,37 +140,37 @@ class ProjectImages {
     data['active'] = this.active;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['project'] = this.project;
+    data['product'] = this.product;
     return data;
   }
 }
 
-class ProjectVideos {
+class ProductVideos {
   int? id;
   String? video;
   bool? isArchived;
   bool? active;
   String? createdAt;
   String? updatedAt;
-  int? project;
+  int? product;
 
-  ProjectVideos(
+  ProductVideos(
       {this.id,
       this.video,
       this.isArchived,
       this.active,
       this.createdAt,
       this.updatedAt,
-      this.project});
+      this.product});
 
-  ProjectVideos.fromJson(Map<String, dynamic> json) {
+  ProductVideos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     video = json['video'];
     isArchived = json['is_archived'];
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    project = json['project'];
+    product = json['product'];
   }
 
   Map<String, dynamic> toJson() {
@@ -173,7 +181,7 @@ class ProjectVideos {
     data['active'] = this.active;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['project'] = this.project;
+    data['product'] = this.product;
     return data;
   }
 }

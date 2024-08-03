@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wghsoga_app/AllUsers/AllUsers.dart';
-import 'package:wghsoga_app/Homepage/Homepage.dart';
-import 'package:wghsoga_app/Projects/AllProjects.dart';
-import 'package:wghsoga_app/SplashScreen/spalsh_screen.dart';
+import 'package:wghsoga_app/Shop/Shop.dart';
+
 
 import 'package:wghsoga_app/theme.dart';
 
@@ -60,7 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return FutureBuilder(
         future: _user_api,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return AllUsersScreen();
+          //return AllUsersScreen();
+          return ShopScreen();
           //return SplashScreen();
 
           //

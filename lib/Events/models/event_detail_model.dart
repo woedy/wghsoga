@@ -1,10 +1,10 @@
-class AllNewsModel {
+class EventDetailModel {
   String? message;
   Data? data;
 
-  AllNewsModel({this.message, this.data});
+  EventDetailModel({this.message, this.data});
 
-  AllNewsModel.fromJson(Map<String, dynamic> json) {
+  EventDetailModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
@@ -20,103 +20,69 @@ class AllNewsModel {
 }
 
 class Data {
-  List<Newss>? newss;
-  Pagination? pagination;
-
-  Data({this.newss, this.pagination});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    if (json['newss'] != null) {
-      newss = <Newss>[];
-      json['newss'].forEach((v) {
-        newss!.add(new Newss.fromJson(v));
-      });
-    }
-    pagination = json['pagination'] != null
-        ? new Pagination.fromJson(json['pagination'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.newss != null) {
-      data['newss'] = this.newss!.map((v) => v.toJson()).toList();
-    }
-    if (this.pagination != null) {
-      data['pagination'] = this.pagination!.toJson();
-    }
-    return data;
-  }
-}
-
-class Newss {
   int? id;
-  List<NewsComments>? newsComments;
-  List<NewsImages>? newsImages;
-  List<NewsVideos>? newsVideos;
-  List<Likes>? likes;
-  List<Likes>? shares;
-  Likes? author;
-  String? newsId;
+  List<EventImages>? eventImages;
+  List<EventVideos>? eventVideos;
+  List<Attendees>? attendees;
+  String? eventId;
   String? title;
-  String? content;
+  String? theme;
+  String? subject;
+  String? eventDate;
+  String? eventTime;
+  String? venue;
+  String? organisedBy;
   bool? isArchived;
   bool? active;
   String? createdAt;
   String? updatedAt;
 
-  Newss(
+  Data(
       {this.id,
-      this.newsComments,
-      this.newsImages,
-      this.newsVideos,
-      this.likes,
-      this.shares,
-      this.author,
-      this.newsId,
+      this.eventImages,
+      this.eventVideos,
+      this.attendees,
+      this.eventId,
       this.title,
-      this.content,
+      this.theme,
+      this.subject,
+      this.eventDate,
+      this.eventTime,
+      this.venue,
+      this.organisedBy,
       this.isArchived,
       this.active,
       this.createdAt,
       this.updatedAt});
 
-  Newss.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if (json['news_comments'] != null) {
-      newsComments = <NewsComments>[];
-      json['news_comments'].forEach((v) {
-        newsComments!.add(new NewsComments.fromJson(v));
+    if (json['event_images'] != null) {
+      eventImages = <EventImages>[];
+      json['event_images'].forEach((v) {
+        eventImages!.add(new EventImages.fromJson(v));
       });
     }
-    if (json['news_images'] != null) {
-      newsImages = <NewsImages>[];
-      json['news_images'].forEach((v) {
-        newsImages!.add(new NewsImages.fromJson(v));
+    if (json['event_videos'] != null) {
+      eventVideos = <EventVideos>[];
+      json['event_videos'].forEach((v) {
+        eventVideos!.add(new EventVideos.fromJson(v));
       });
     }
-    if (json['news_videos'] != null) {
-      newsVideos = <NewsVideos>[];
-      json['news_videos'].forEach((v) {
-        newsVideos!.add(new NewsVideos.fromJson(v));
+    if (json['attendees'] != null) {
+      attendees = <Attendees>[];
+      json['attendees'].forEach((v) {
+        attendees!.add(new Attendees.fromJson(v));
       });
     }
-    if (json['likes'] != null) {
-      likes = <Likes>[];
-      json['likes'].forEach((v) {
-        likes!.add(new Likes.fromJson(v));
-      });
-    }
-    if (json['shares'] != null) {
-      shares = <Likes>[];
-      json['shares'].forEach((v) {
-        shares!.add(new Likes.fromJson(v));
-      });
-    }
-    author = json['author'] != null ? new Likes.fromJson(json['author']) : null;
-    newsId = json['news_id'];
+    eventId = json['event_id'];
     title = json['title'];
-    content = json['content'];
+    theme = json['theme'];
+    subject = json['subject'];
+    eventDate = json['event_date'];
+    eventTime = json['event_time'];
+    venue = json['venue'];
+    organisedBy = json['organised_by'];
     isArchived = json['is_archived'];
     active = json['active'];
     createdAt = json['created_at'];
@@ -126,28 +92,23 @@ class Newss {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    if (this.newsComments != null) {
-      data['news_comments'] =
-          this.newsComments!.map((v) => v.toJson()).toList();
+    if (this.eventImages != null) {
+      data['event_images'] = this.eventImages!.map((v) => v.toJson()).toList();
     }
-    if (this.newsImages != null) {
-      data['news_images'] = this.newsImages!.map((v) => v.toJson()).toList();
+    if (this.eventVideos != null) {
+      data['event_videos'] = this.eventVideos!.map((v) => v.toJson()).toList();
     }
-    if (this.newsVideos != null) {
-      data['news_videos'] = this.newsVideos!.map((v) => v.toJson()).toList();
+    if (this.attendees != null) {
+      data['attendees'] = this.attendees!.map((v) => v.toJson()).toList();
     }
-    if (this.likes != null) {
-      data['likes'] = this.likes!.map((v) => v.toJson()).toList();
-    }
-    if (this.shares != null) {
-      data['shares'] = this.shares!.map((v) => v.toJson()).toList();
-    }
-    if (this.author != null) {
-      data['author'] = this.author!.toJson();
-    }
-    data['news_id'] = this.newsId;
+    data['event_id'] = this.eventId;
     data['title'] = this.title;
-    data['content'] = this.content;
+    data['theme'] = this.theme;
+    data['subject'] = this.subject;
+    data['event_date'] = this.eventDate;
+    data['event_time'] = this.eventTime;
+    data['venue'] = this.venue;
+    data['organised_by'] = this.organisedBy;
     data['is_archived'] = this.isArchived;
     data['active'] = this.active;
     data['created_at'] = this.createdAt;
@@ -156,77 +117,32 @@ class Newss {
   }
 }
 
-class NewsComments {
-  int? id;
-  String? comment;
-  bool? isArchived;
-  bool? active;
-  String? createdAt;
-  String? updatedAt;
-  int? news;
-  int? user;
-
-  NewsComments(
-      {this.id,
-      this.comment,
-      this.isArchived,
-      this.active,
-      this.createdAt,
-      this.updatedAt,
-      this.news,
-      this.user});
-
-  NewsComments.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    comment = json['comment'];
-    isArchived = json['is_archived'];
-    active = json['active'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    news = json['news'];
-    user = json['user'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['comment'] = this.comment;
-    data['is_archived'] = this.isArchived;
-    data['active'] = this.active;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['news'] = this.news;
-    data['user'] = this.user;
-    return data;
-  }
-}
-
-class NewsImages {
+class EventImages {
   int? id;
   String? image;
   bool? isArchived;
   bool? active;
   String? createdAt;
   String? updatedAt;
-  int? news;
+  int? event;
 
-  NewsImages(
+  EventImages(
       {this.id,
       this.image,
       this.isArchived,
       this.active,
       this.createdAt,
       this.updatedAt,
-      this.news});
+      this.event});
 
-  NewsImages.fromJson(Map<String, dynamic> json) {
+  EventImages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     image = json['image'];
     isArchived = json['is_archived'];
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    news = json['news'];
+    event = json['event'];
   }
 
   Map<String, dynamic> toJson() {
@@ -237,37 +153,37 @@ class NewsImages {
     data['active'] = this.active;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['news'] = this.news;
+    data['event'] = this.event;
     return data;
   }
 }
 
-class NewsVideos {
+class EventVideos {
   int? id;
   String? video;
   bool? isArchived;
   bool? active;
   String? createdAt;
   String? updatedAt;
-  int? news;
+  int? event;
 
-  NewsVideos(
+  EventVideos(
       {this.id,
       this.video,
       this.isArchived,
       this.active,
       this.createdAt,
       this.updatedAt,
-      this.news});
+      this.event});
 
-  NewsVideos.fromJson(Map<String, dynamic> json) {
+  EventVideos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     video = json['video'];
     isArchived = json['is_archived'];
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    news = json['news'];
+    event = json['event'];
   }
 
   Map<String, dynamic> toJson() {
@@ -278,12 +194,12 @@ class NewsVideos {
     data['active'] = this.active;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    data['news'] = this.news;
+    data['event'] = this.event;
     return data;
   }
 }
 
-class Likes {
+class Attendees {
   int? id;
   UserProfile? userProfile;
   String? password;
@@ -317,7 +233,7 @@ class Likes {
   bool? admin;
   String? timestamp;
 
-  Likes(
+  Attendees(
       {this.id,
       this.userProfile,
       this.password,
@@ -351,7 +267,7 @@ class Likes {
       this.admin,
       this.timestamp});
 
-  Likes.fromJson(Map<String, dynamic> json) {
+  Attendees.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userProfile = json['user_profile'] != null
         ? new UserProfile.fromJson(json['user_profile'])
@@ -517,31 +433,6 @@ class UserProfile {
     data['updated_at'] = this.updatedAt;
     data['user'] = this.user;
     data['room'] = this.room;
-    return data;
-  }
-}
-
-class Pagination {
-  int? pageNumber;
-  int? totalPages;
-  Null? next;
-  Null? previous;
-
-  Pagination({this.pageNumber, this.totalPages, this.next, this.previous});
-
-  Pagination.fromJson(Map<String, dynamic> json) {
-    pageNumber = json['page_number'];
-    totalPages = json['total_pages'];
-    next = json['next'];
-    previous = json['previous'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['page_number'] = this.pageNumber;
-    data['total_pages'] = this.totalPages;
-    data['next'] = this.next;
-    data['previous'] = this.previous;
     return data;
   }
 }

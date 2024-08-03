@@ -154,6 +154,8 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
               ),
             ),
 
+               //  Search Input
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -174,6 +176,11 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                 },
               ),
             ),
+
+              // End Search Input
+
+
+
             Expanded(
               child: FutureBuilder<AllUsersModel?>(
                 future: _futureAllUsers,
@@ -322,6 +329,8 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       ),
     );
   }
+
+
 
 
   void _applyFilters() {
@@ -478,5 +487,5 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       },
     );
   }
-
+  
 }

@@ -1,4 +1,3 @@
-
 class NewsDetailModel {
   String? message;
   Data? data;
@@ -22,9 +21,243 @@ class NewsDetailModel {
 
 class Data {
   int? id;
+  List<NewsComments>? newsComments;
+  List<NewsImages>? newsImages;
+  List<NewsVideos>? newsVideos;
+  List<Likes>? likes;
+  List<Likes>? shares;
+  Likes? author;
+  String? newsId;
+  String? title;
+  String? content;
+  bool? isArchived;
+  bool? active;
+  String? createdAt;
+  String? updatedAt;
+
+  Data(
+      {this.id,
+      this.newsComments,
+      this.newsImages,
+      this.newsVideos,
+      this.likes,
+      this.shares,
+      this.author,
+      this.newsId,
+      this.title,
+      this.content,
+      this.isArchived,
+      this.active,
+      this.createdAt,
+      this.updatedAt});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    if (json['news_comments'] != null) {
+      newsComments = <NewsComments>[];
+      json['news_comments'].forEach((v) {
+        newsComments!.add(new NewsComments.fromJson(v));
+      });
+    }
+    if (json['news_images'] != null) {
+      newsImages = <NewsImages>[];
+      json['news_images'].forEach((v) {
+        newsImages!.add(new NewsImages.fromJson(v));
+      });
+    }
+    if (json['news_videos'] != null) {
+      newsVideos = <NewsVideos>[];
+      json['news_videos'].forEach((v) {
+        newsVideos!.add(new NewsVideos.fromJson(v));
+      });
+    }
+    if (json['likes'] != null) {
+      likes = <Likes>[];
+      json['likes'].forEach((v) {
+        likes!.add(new Likes.fromJson(v));
+      });
+    }
+    if (json['shares'] != null) {
+      shares = <Likes>[];
+      json['shares'].forEach((v) {
+        shares!.add(new Likes.fromJson(v));
+      });
+    }
+    author = json['author'] != null ? new Likes.fromJson(json['author']) : null;
+    newsId = json['news_id'];
+    title = json['title'];
+    content = json['content'];
+    isArchived = json['is_archived'];
+    active = json['active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    if (this.newsComments != null) {
+      data['news_comments'] =
+          this.newsComments!.map((v) => v.toJson()).toList();
+    }
+    if (this.newsImages != null) {
+      data['news_images'] = this.newsImages!.map((v) => v.toJson()).toList();
+    }
+    if (this.newsVideos != null) {
+      data['news_videos'] = this.newsVideos!.map((v) => v.toJson()).toList();
+    }
+    if (this.likes != null) {
+      data['likes'] = this.likes!.map((v) => v.toJson()).toList();
+    }
+    if (this.shares != null) {
+      data['shares'] = this.shares!.map((v) => v.toJson()).toList();
+    }
+    if (this.author != null) {
+      data['author'] = this.author!.toJson();
+    }
+    data['news_id'] = this.newsId;
+    data['title'] = this.title;
+    data['content'] = this.content;
+    data['is_archived'] = this.isArchived;
+    data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class NewsComments {
+  int? id;
+  String? comment;
+  bool? isArchived;
+  bool? active;
+  String? createdAt;
+  String? updatedAt;
+  int? news;
+  int? user;
+
+  NewsComments(
+      {this.id,
+      this.comment,
+      this.isArchived,
+      this.active,
+      this.createdAt,
+      this.updatedAt,
+      this.news,
+      this.user});
+
+  NewsComments.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    comment = json['comment'];
+    isArchived = json['is_archived'];
+    active = json['active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    news = json['news'];
+    user = json['user'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['comment'] = this.comment;
+    data['is_archived'] = this.isArchived;
+    data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['news'] = this.news;
+    data['user'] = this.user;
+    return data;
+  }
+}
+
+class NewsImages {
+  int? id;
+  String? image;
+  bool? isArchived;
+  bool? active;
+  String? createdAt;
+  String? updatedAt;
+  int? news;
+
+  NewsImages(
+      {this.id,
+      this.image,
+      this.isArchived,
+      this.active,
+      this.createdAt,
+      this.updatedAt,
+      this.news});
+
+  NewsImages.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    image = json['image'];
+    isArchived = json['is_archived'];
+    active = json['active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    news = json['news'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['image'] = this.image;
+    data['is_archived'] = this.isArchived;
+    data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['news'] = this.news;
+    return data;
+  }
+}
+
+class NewsVideos {
+  int? id;
+  String? video;
+  bool? isArchived;
+  bool? active;
+  String? createdAt;
+  String? updatedAt;
+  int? news;
+
+  NewsVideos(
+      {this.id,
+      this.video,
+      this.isArchived,
+      this.active,
+      this.createdAt,
+      this.updatedAt,
+      this.news});
+
+  NewsVideos.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    video = json['video'];
+    isArchived = json['is_archived'];
+    active = json['active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    news = json['news'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['video'] = this.video;
+    data['is_archived'] = this.isArchived;
+    data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['news'] = this.news;
+    return data;
+  }
+}
+
+class Likes {
+  int? id;
   UserProfile? userProfile;
   String? password;
-  String? lastLogin;
+  Null? lastLogin;
   String? userId;
   String? email;
   String? username;
@@ -33,62 +266,62 @@ class Data {
   String? lastName;
   String? phone;
   String? yearGroup;
-  String? fcmToken;
-  String? otpCode;
+  Null? fcmToken;
+  Null? otpCode;
   String? emailToken;
   bool? emailVerified;
   String? photo;
-  String? dob;
+  Null? dob;
   bool? maritalStatus;
   String? country;
   String? language;
-  String? aboutMe;
+  Null? aboutMe;
   bool? profileComplete;
   bool? verified;
   bool? isArchived;
-  String? locationName;
-  double? lat;
-  double? lng;
+  Null? locationName;
+  Null? lat;
+  Null? lng;
   bool? isActive;
   bool? staff;
   bool? admin;
   String? timestamp;
 
-  Data(
+  Likes(
       {this.id,
-        this.userProfile,
-        this.password,
-        this.lastLogin,
-        this.userId,
-        this.email,
-        this.username,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.phone,
-        this.yearGroup,
-        this.fcmToken,
-        this.otpCode,
-        this.emailToken,
-        this.emailVerified,
-        this.photo,
-        this.dob,
-        this.maritalStatus,
-        this.country,
-        this.language,
-        this.aboutMe,
-        this.profileComplete,
-        this.verified,
-        this.isArchived,
-        this.locationName,
-        this.lat,
-        this.lng,
-        this.isActive,
-        this.staff,
-        this.admin,
-        this.timestamp});
+      this.userProfile,
+      this.password,
+      this.lastLogin,
+      this.userId,
+      this.email,
+      this.username,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.phone,
+      this.yearGroup,
+      this.fcmToken,
+      this.otpCode,
+      this.emailToken,
+      this.emailVerified,
+      this.photo,
+      this.dob,
+      this.maritalStatus,
+      this.country,
+      this.language,
+      this.aboutMe,
+      this.profileComplete,
+      this.verified,
+      this.isArchived,
+      this.locationName,
+      this.lat,
+      this.lng,
+      this.isActive,
+      this.staff,
+      this.admin,
+      this.timestamp});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Likes.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userProfile = json['user_profile'] != null
         ? new UserProfile.fromJson(json['user_profile'])
@@ -168,16 +401,16 @@ class Data {
 class UserProfile {
   int? id;
   String? profileId;
-  String? profession;
-  String? jobTitle;
-  String? placeOfWork;
-  String? city;
-  String? house;
-  String? website;
-  String? linkedIn;
-  String? instagram;
-  String? facebook;
-  String? twitter;
+  Null? profession;
+  Null? jobTitle;
+  Null? placeOfWork;
+  Null? city;
+  Null? house;
+  Null? website;
+  Null? linkedIn;
+  Null? instagram;
+  Null? facebook;
+  Null? twitter;
   bool? profileComplete;
   bool? verified;
   bool? isDeleted;
@@ -185,29 +418,29 @@ class UserProfile {
   String? createdAt;
   String? updatedAt;
   int? user;
-  String? room;
+  int? room;
 
   UserProfile(
       {this.id,
-        this.profileId,
-        this.profession,
-        this.jobTitle,
-        this.placeOfWork,
-        this.city,
-        this.house,
-        this.website,
-        this.linkedIn,
-        this.instagram,
-        this.facebook,
-        this.twitter,
-        this.profileComplete,
-        this.verified,
-        this.isDeleted,
-        this.active,
-        this.createdAt,
-        this.updatedAt,
-        this.user,
-        this.room});
+      this.profileId,
+      this.profession,
+      this.jobTitle,
+      this.placeOfWork,
+      this.city,
+      this.house,
+      this.website,
+      this.linkedIn,
+      this.instagram,
+      this.facebook,
+      this.twitter,
+      this.profileComplete,
+      this.verified,
+      this.isDeleted,
+      this.active,
+      this.createdAt,
+      this.updatedAt,
+      this.user,
+      this.room});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     id = json['id'];

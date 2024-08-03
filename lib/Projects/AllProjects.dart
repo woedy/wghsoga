@@ -1,16 +1,13 @@
-
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:wghsoga_app/Projects/ProjectDetails.dart';
+import 'package:wghsoga_app/Projects/models/all_projects_model.dart';
 import 'package:wghsoga_app/constants.dart';
 
-import '../../Components/keyboard_utils.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-
-
-Future<AllProjectsModel> get_all_projects({int page = 1, Map<String, String>? filters, String? search_query}) async {
+Future<AllProjectsModel> get_all_projects(
+    {int page = 1, Map<String, String>? filters, String? search_query}) async {
   var token = await getApiPref();
 
   // Construct the query parameters from the filters map
@@ -21,26 +18,26 @@ Future<AllProjectsModel> get_all_projects({int page = 1, Map<String, String>? fi
     });
   }
 
-  final String url = hostName + '/api/accounts/get-all-users/?search=${search_query ?? ''}&page=$page$filterQuery';
+  final String url = hostName +
+      '/api/projects/get-all-projects/?search=${search_query ?? ''}&page=$page$filterQuery';
 
   final response = await http.get(
     Uri.parse(url),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization': 'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
-  //'Authorization': 'Token '  + token.toString()
-
-  },
+      'Authorization':
+          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      //'Authorization': 'Token '  + token.toString()
+    },
   );
 
   if (response.statusCode == 200) {
-    return AllUsersModel.fromJson(jsonDecode(response.body));
+    return AllProjectsModel.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to load data');
   }
 }
-
 
 class AllProjects extends StatefulWidget {
   const AllProjects({super.key});
@@ -50,280 +47,475 @@ class AllProjects extends StatefulWidget {
 }
 
 class _AllProjectsState extends State<AllProjects> {
+  List<Projects> _allProjects = [];
+  int _currentPage = 1;
+  Map<String, String>? _filters;
+  Future<AllProjectsModel?>? _futureAllProjects;
+  bool _isLoading = false;
+  String? _searchQuery;
+  int _totalPages = 1;
 
-  final _formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    super.initState();
+    _futureAllProjects = _fetchProjects();
+  }
 
+  Future<AllProjectsModel?> _fetchProjects({bool loadMore = false}) async {
+    if (_isLoading) return Future.error('Loading in progress');
 
-  List<FocusNode>? _focusNodes;
+    setState(() {
+      _isLoading = true;
+    });
 
-  TextEditingController controller = TextEditingController(text: "");
-  bool hasError = false;
-  String email_token = "";
+    try {
+      final projectsData = await get_all_projects(
+        page: loadMore ? _currentPage + 1 : 1,
+        filters: _filters,
+        search_query: _searchQuery,
+      );
 
+      setState(() {
+        if (loadMore) {
+          _allProjects.addAll(projectsData.data!.projects!);
+          _currentPage++;
+        } else {
+          _allProjects = projectsData.data!.projects!;
+          _currentPage = 1;
+        }
+        _totalPages = projectsData.data!.pagination!.totalPages!;
+        _isLoading = false;
+      });
 
+      if (_allProjects.isEmpty) {
+        return null; // Return null when no users are available
+      }
 
+      return projectsData;
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      return Future.error('Failed to load data');
+    }
+  }
+
+  void _applyFilters() {
+    setState(() {
+      _futureAllProjects = _fetchProjects();
+    });
+  }
+
+  void _resetFilters() {
+    setState(() {
+      _filters = null; // Reset filters
+      _searchQuery = null;
+      _currentPage = 1;
+      _futureAllProjects = _fetchProjects();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/wes_back2.png'),
-            fit: BoxFit.cover
-          )
-        ),
-        child: SafeArea(
-
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: wesGreen,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              blurRadius: 2,
-                              offset: Offset(2, 4), // Shadow position
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: wesYellow,
+        body: Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+          image: const DecorationImage(
+              image: AssetImage('assets/images/wes_back2.png'),
+              fit: BoxFit.cover)),
+      child: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: wesGreen,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            blurRadius: 2,
+                            offset: const Offset(2, 4), // Shadow position
                           ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: wesYellow,
                         ),
                       ),
                     ),
-                    Text('Projects', style: TextStyle(height: 1, color: wesWhite, fontSize: 18, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-                    Icon(Icons.search, color: wesYellow, size: 20,)
-                  ],
-                ),
+                  ),
+                  const Text(
+                    'Projects',
+                    style: TextStyle(
+                        height: 1,
+                        color: wesWhite,
+                        fontSize: 18,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w300),
+                  ),
+                  const Icon(
+                    Icons.search,
+                    color: wesYellow,
+                    size: 20,
+                  )
+                ],
               ),
+            ),
 
-              Expanded(child: Container(
-                margin: EdgeInsets.all(10),
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index){
-                    return  Container(
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.only(bottom: 3),
-                      decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            children: [
-                              Container(
-                                height: 180,
-                               // width: 100,
+            //  Start - Search Input
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Search',
+                  labelStyle: TextStyle(color: Colors.white),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: wesWhite)),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: wesWhite)),
+                ),
+                style: const TextStyle(color: wesWhite),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                    _currentPage = 1;
+                  });
+                  _applyFilters();
+                },
+              ),
+            ),
+
+            // End - Search Input
+
+            //  Start - List View Container
+
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder<AllProjectsModel?>(
+                  future: _futureAllProjects,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || _allProjects.isEmpty) {
+                      return const Center(child: Text('No Projects Available'));
+                    } else {
+                      final allProjects = snapshot.data!.data!.projects!;
+
+                      return NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          if (!_isLoading &&
+                              scrollInfo.metrics.pixels ==
+                                  scrollInfo.metrics.maxScrollExtent) {
+                            if (_currentPage < _totalPages) {
+                              _fetchProjects(loadMore: true);
+                            }
+                            return true;
+                          }
+                          return false;
+                        },
+                        child: ListView.builder(
+                          itemCount: allProjects.length + (_isLoading ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index == allProjects.length) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            return InkWell(
+                              onTap: () {
+                                
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProjectDetails(
+                                      project_id: allProjects[index]
+                                          .projectId
+                                          .toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(bottom: 3),
                                 decoration: BoxDecoration(
-                                  color: wesYellow,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 2,
-                                      offset: Offset(2, 4), // Shadow position
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          height: 180,
+                                          decoration: BoxDecoration(
+                                            color: wesYellow,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.2),
+                                                blurRadius: 2,
+                                                offset: const Offset(2, 4),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          left: 1,
+                                          right: 1,
+                                          child: Container(
+                                            height: 175,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              image: DecorationImage(
+                                                image: NetworkImage(hostName + allProjects[index].projectImages![0].image.toString(),),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  blurRadius: 2,
+                                                  offset: const Offset(2, 4),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          allProjects[index].title ?? "",
+                                          style: const TextStyle(
+                                            height: 1,
+                                            color: wesYellow,
+                                            fontSize: 16,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          allProjects[index].details ?? "",
+                                          style: const TextStyle(
+                                            height: 1,
+                                            color: wesWhite,
+                                            fontSize: 15,
+                                            fontFamily: 'Montserrat',
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                      ],
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: wesGreen,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: const Text(
+                                        'View Projects',
+                                        style: TextStyle(
+                                          height: 1,
+                                          color: wesYellow,
+                                          fontSize: 12,
+                                          fontFamily: 'Montserrat',
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Positioned(
-                                top: 0,
-                                left: 1,
-                                right: 1,
-                                child: Container(
-                                  height: 175,
-                                  //width: 95,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      image: AssetImage('assets/images/nyahan.png'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 2,
-                                        offset: Offset(2, 4), // Shadow position
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-
-                            children: [
-                              Text('2022 OGA Fundraising Dinner Dance towards...', style: TextStyle(height: 1, color: wesYellow, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w600),),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text('Support WGHS NSMQ team', style: TextStyle(height: 1, color: wesWhite, fontSize: 15, fontFamily: 'Montserrat',),),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: wesGreen,
-                              borderRadius: BorderRadius.circular(5)
-                            ),
-                            child: Text('View Projects', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat',),),
-
-                          )
-
-
-                        ],
-                      ),
-                    );
+                            );
+                          },
+                        ),
+                      );
+                    }
                   },
-
                 ),
-              )),
+              ),
+            ),
+            //  End - List View Container
 
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 15),
-
-                decoration: BoxDecoration(
-                  color: wesGreen,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
+            // Start - Bottom Navigator
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                color: wesGreen,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
+                      */
+                    },
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.home,
+                          color: wesYellow,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Home',
+                          style: TextStyle(
+                              height: 1,
+                              color: wesYellow,
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w300),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
-                      */  },
-                      child: Column(
-                        children: [
-                          Icon(Icons.home, color: wesYellow,),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text('Home', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                        ],
-                      ),
-                    ),
-                    InkWell(
-                      onTap: (){
+                  ),
+                  InkWell(
+                    onTap: () {
                       //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
-                      },
-                      child: Column(
-                        children: [
-                          Icon(Icons.shopping_cart, color: wesYellow,),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text('Shop', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                        ],
-                      ),
+                    },
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.shopping_cart,
+                          color: wesYellow,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Shop',
+                          style: TextStyle(
+                              height: 1,
+                              color: wesYellow,
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w300),
+                        ),
+                      ],
                     ),
-                    InkWell(
-                      onTap: (){
-                       // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
-
-
-                      },
-                      child: Column(
-                        children: [
-                          Icon(Icons.money, color: wesYellow,),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text('Pay Dues', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                        ],
-                      ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
+                    },
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.money,
+                          color: wesYellow,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Pay Dues',
+                          style: TextStyle(
+                              height: 1,
+                              color: wesYellow,
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w300),
+                        ),
+                      ],
                     ),
-
-                    InkWell(
-                      onTap: (){
-
-                     //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
-
-                      },
-                      child: Column(
-                        children: [
-                          Icon(Icons.settings, color: wesYellow,),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text('Settings', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-
-                        ],
-                      ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
+                    },
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.settings,
+                          color: wesYellow,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Settings',
+                          style: TextStyle(
+                              height: 1,
+                              color: wesYellow,
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w300),
+                        ),
+                      ],
                     ),
-
-                    InkWell(
-                      onTap: (){
-
-                        //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
-
-                      },
-                      child: Column(
-                        children: [
-
-                          Icon(Icons.account_circle, color: wesYellow,),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text('Settings', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
-
-                        ],
-                      ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
+                    },
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.account_circle,
+                          color: wesYellow,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Settings',
+                          style: TextStyle(
+                              height: 1,
+                              color: wesYellow,
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w300),
+                        ),
+                      ],
                     ),
-
-
-                  ],
-                ),
-              )
-
-            ],
-          ),
+                  ),
+                ],
+              ),
+            )
+            //  End - Bottom Navigator
+          ],
         ),
-      )
-    );
+      ),
+    ));
   }
-
 }
