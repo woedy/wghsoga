@@ -1,26 +1,24 @@
 import 'dart:convert';
 
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:wghsoga_app/Auth/Register/models/verify_email.dart';
+import 'package:flutter/services.dart';
+import 'package:wghsoga_app/Auth/Register/Register3.dart';
 import 'package:wghsoga_app/Components/error_dialog.dart';
 import 'package:wghsoga_app/Components/keyboard_utils.dart';
 import 'package:wghsoga_app/Components/loading_dialog.dart';
-import 'package:wghsoga_app/Components/sucess_dialog.dart';
-import 'package:wghsoga_app/Homepage/Homepage.dart';
 import 'package:wghsoga_app/constants.dart';
 import 'package:http/http.dart' as http;
 
-Future<VerifyEmailModel> verify_email(String email, String email_token) async {
+Future<ForgotPasswordModel> forgot_password(String email) async {
   final response = await http.post(
-    Uri.parse(hostName + "/api/accounts/verify-email/"),
+    Uri.parse(hostName + "/api/accounts/forgot-password/"),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json'
     },
     body: jsonEncode({
       "email": email,
-      "email_token": email_token,
     }),
   );
 
@@ -28,38 +26,36 @@ Future<VerifyEmailModel> verify_email(String email, String email_token) async {
     print(jsonDecode(response.body));
     final result = json.decode(response.body);
     if (result != null) {}
-    return VerifyEmailModel.fromJson(jsonDecode(response.body));
+    return ForgotPasswordModel.fromJson(jsonDecode(response.body));
   } else if (response.statusCode == 422 ||
       response.statusCode == 403 ||
       response.statusCode == 400) {
     print(jsonDecode(response.body));
-    return VerifyEmailModel.fromJson(jsonDecode(response.body));
+    return ForgotPasswordModel.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception('Failed to validate email');
+    throw Exception('Failed to send email');
   }
 }
 
-class VerifyEmail extends StatefulWidget {
-  final data;
-  const VerifyEmail({super.key, required this.data});
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({super.key});
 
   @override
-  State<VerifyEmail> createState() => _VerifyEmailState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _VerifyEmailState extends State<VerifyEmail> {
+class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
 
-  List<FocusNode>? _focusNodes;
+  Future<VerifyEmailModel>? _futureValidateEmail;
 
-  TextEditingController controller = TextEditingController(text: "");
-  bool hasError = false;
-  String email_token = "";
-  Future<VerifyEmailModel>? _futureVerifyEmail;
+  var email;
 
   @override
   Widget build(BuildContext context) {
-    return (_futureVerifyEmail == null) ? buildColumn() : buildFutureBuilder();
+    return (_futureValidateEmail == null)
+        ? buildColumn()
+        : buildFutureBuilder();
   }
 
   buildColumn() {
@@ -120,7 +116,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Verify Email',
+                          'Forgot Password',
                           style: TextStyle(
                               height: 1,
                               color: wesWhite,
@@ -132,7 +128,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           height: 50,
                         ),
                         Text(
-                          'Verify Email.',
+                          'Enter your email to reset password',
                           style: TextStyle(
                               height: 1,
                               color: wesWhite,
@@ -153,84 +149,67 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         borderRadius: BorderRadius.circular(15)),
                     child: Form(
                       key: _formKey,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Enter verification code here',
-                              style: TextStyle(
-                                  height: 1,
-                                  color: wesYellow,
-                                  fontSize: 12,
-                                  fontFamily: 'Montserrat'),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: PinCodeTextField(
-                                    autofocus: true,
-                                    controller: controller,
-                                    hideCharacter: false,
-                                    highlight: true,
-                                    highlightColor: wesYellow,
-                                    defaultBorderColor:
-                                        Colors.white.withOpacity(0.3),
-                                    hasTextBorderColor:
-                                        Colors.white.withOpacity(0.2),
-                                    highlightPinBoxColor: Colors.transparent,
-                                    pinBoxColor: Colors.transparent,
-                                    pinBoxRadius: 10,
-                                    keyboardType: TextInputType.text,
-                                    maxLength: 4,
-                                    //maskCharacter: "😎",
-                                    onTextChanged: (text) {
-                                      setState(() {
-                                        hasError = false;
-                                      });
-                                    },
-                                    onDone: (text) {
-                                      print("DONE $text");
-                                      print(
-                                          "DONE CONTROLLER ${controller.text}");
-                                      email_token = text.toString();
-                                    },
-                                    pinBoxWidth: 70,
-                                    pinBoxHeight: 70,
-                                    //hasUnderline: true,
-                                    wrapAlignment: WrapAlignment.spaceAround,
-                                    pinBoxDecoration: ProvidedPinBoxDecoration
-                                        .defaultPinBoxDecoration,
-                                    pinTextStyle: TextStyle(fontSize: 35.0),
-                                    pinTextAnimatedSwitcherTransition:
-                                        ProvidedPinBoxTextAnimation
-                                            .scalingTransition,
-                                    pinTextAnimatedSwitcherDuration:
-                                        Duration(milliseconds: 300),
-                                    highlightAnimationBeginColor: Colors.black,
-                                    highlightAnimationEndColor: Colors.white12,
-                                  ),
-                                )
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                                //color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Colors.white.withOpacity(0.1))),
+                            child: TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                //hintText: 'Enter Username/Email',
+
+                                hintStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.normal),
+                                labelText: "Email",
+                                labelStyle:
+                                    TextStyle(fontSize: 13, color: bodyText2),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: wesWhite)),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: wesWhite)),
+                                border: InputBorder.none,
+                              ),
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(225),
+                                PasteTextInputFormatter(),
                               ],
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Email is required';
+                                }
+                                if (value.length < 3) {
+                                  return 'Name too short';
+                                }
+                                String pattern =
+                                    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                                    r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                                    r"{0,253}[a-zA-Z0-9])?)*$";
+                                RegExp regex = RegExp(pattern);
+                                if (!regex.hasMatch(value))
+                                  return 'Enter a valid email address';
+
+                                return null;
+                              },
+                              textInputAction: TextInputAction.next,
+                              autofocus: false,
+                              onSaved: (value) {
+                                setState(() {
+                                  email = value!.toLowerCase();
+                                });
+                              },
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              'Resend email verification',
-                              style: TextStyle(
-                                  height: 1,
-                                  color: wesYellow,
-                                  fontSize: 12,
-                                  fontFamily: 'Montserrat'),
-                            ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                       
+                        ],
                       ),
                     ),
                   ),
@@ -251,8 +230,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   _formKey.currentState!.save();
                   KeyboardUtil.hideKeyboard(context);
 
-                  _futureVerifyEmail =
-                      verify_email(widget.data['email'], email_token);
+                  _futureValidateEmail = forgot_password(email!);
                 }
               },
               child: Container(
@@ -273,9 +251,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
     ));
   }
 
-  FutureBuilder<VerifyEmailModel> buildFutureBuilder() {
-    return FutureBuilder<VerifyEmailModel>(
-        future: _futureVerifyEmail,
+  FutureBuilder<ForgotPasswordModel> buildFutureBuilder() {
+    return FutureBuilder<ForgotPasswordModel>(
+        future: _futureValidateEmail,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingDialogBox(
@@ -284,20 +262,25 @@ class _VerifyEmailState extends State<VerifyEmail> {
           } else if (snapshot.hasData) {
             var data = snapshot.data!;
 
+            print("#########################");
+            //print(data.data!.token!);
+
+
             if (data.message == "Successful") {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomepageScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => Register3(data: email)),
                 );
 
-                showDialog(
+                /*         showDialog(
                     barrierDismissible: true,
                     context: context,
                     builder: (BuildContext context) {
                       // Show the dialog
                       return SuccessDialogBox(text: " Successful");
-                    });
+                    }); */
               });
             } else if (data.message == "Errors") {
               String? errorKey = snapshot.data!.errors!.keys.firstWhere(
@@ -309,8 +292,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => VerifyEmail(
-                                data: widget.data,
+                          builder: (context) => ForgotPassword(
                               )));
 
                   String customErrorMessage =
@@ -331,4 +313,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
           );
         });
   }
+
+
+
+
 }

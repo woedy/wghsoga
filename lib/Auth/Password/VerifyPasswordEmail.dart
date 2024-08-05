@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:wghsoga_app/Auth/Register/models/verify_email.dart';
 import 'package:wghsoga_app/Components/error_dialog.dart';
 import 'package:wghsoga_app/Components/keyboard_utils.dart';
 import 'package:wghsoga_app/Components/loading_dialog.dart';
@@ -11,7 +10,7 @@ import 'package:wghsoga_app/Homepage/Homepage.dart';
 import 'package:wghsoga_app/constants.dart';
 import 'package:http/http.dart' as http;
 
-Future<VerifyEmailModel> verify_email(String email, String email_token) async {
+Future<ForgotPasswordModel> verify_email(String email, String email_token) async {
   final response = await http.post(
     Uri.parse(hostName + "/api/accounts/verify-email/"),
     headers: <String, String>{
@@ -28,26 +27,26 @@ Future<VerifyEmailModel> verify_email(String email, String email_token) async {
     print(jsonDecode(response.body));
     final result = json.decode(response.body);
     if (result != null) {}
-    return VerifyEmailModel.fromJson(jsonDecode(response.body));
+    return ForgotPasswordModel.fromJson(jsonDecode(response.body));
   } else if (response.statusCode == 422 ||
       response.statusCode == 403 ||
       response.statusCode == 400) {
     print(jsonDecode(response.body));
-    return VerifyEmailModel.fromJson(jsonDecode(response.body));
+    return ForgotPasswordModel.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to validate email');
   }
 }
 
-class VerifyEmail extends StatefulWidget {
+class VerifyPasswordEmail extends StatefulWidget {
   final data;
-  const VerifyEmail({super.key, required this.data});
+  const VerifyPasswordEmail({super.key, required this.data});
 
   @override
-  State<VerifyEmail> createState() => _VerifyEmailState();
+  State<VerifyPasswordEmail> createState() => _VerifyPasswordEmailState();
 }
 
-class _VerifyEmailState extends State<VerifyEmail> {
+class _VerifyPasswordEmailState extends State<VerifyPasswordEmail> {
   final _formKey = GlobalKey<FormState>();
 
   List<FocusNode>? _focusNodes;
@@ -55,7 +54,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   TextEditingController controller = TextEditingController(text: "");
   bool hasError = false;
   String email_token = "";
-  Future<VerifyEmailModel>? _futureVerifyEmail;
+  Future<ForgotPasswordModel>? _futureVerifyEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +119,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Verify Email',
+                          'Verify Password Email',
                           style: TextStyle(
                               height: 1,
                               color: wesWhite,
@@ -132,7 +131,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           height: 50,
                         ),
                         Text(
-                          'Verify Email.',
+                          'Secure your account.',
                           style: TextStyle(
                               height: 1,
                               color: wesWhite,
@@ -273,8 +272,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
     ));
   }
 
-  FutureBuilder<VerifyEmailModel> buildFutureBuilder() {
-    return FutureBuilder<VerifyEmailModel>(
+  FutureBuilder<ForgotPasswordModel> buildFutureBuilder() {
+    return FutureBuilder<ForgotPasswordModel>(
         future: _futureVerifyEmail,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -309,7 +308,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => VerifyEmail(
+                          builder: (context) => ResetPassword(
                                 data: widget.data,
                               )));
 
