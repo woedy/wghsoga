@@ -1,8 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:wghsoga_app/Auth/Settings/SettingsScreen.dart';
+import 'package:wghsoga_app/Homepage/Homepage.dart';
+import 'package:wghsoga_app/PayDues/PayDuesScreen.dart';
 import 'package:wghsoga_app/Shop/ShopDetails.dart';
 import 'package:wghsoga_app/Shop/models/all_products_model.dart';
+import 'package:wghsoga_app/UserProfile/user_profile.dart';
 import 'package:wghsoga_app/constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -295,156 +299,165 @@ class _ShopScreenState extends State<ShopScreen> {
                         );
                       }
                     })),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                color: wesGreen,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
-                      */
-                    },
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.home,
-                          color: wesYellow,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Home',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesYellow,
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
-                    },
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.shopping_cart,
-                          color: wesYellow,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Shop',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesYellow,
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
-                    },
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.money,
-                          color: wesYellow,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Pay Dues',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesYellow,
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
-                    },
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.settings,
-                          color: wesYellow,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Settings',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesYellow,
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
-                    },
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.account_circle,
-                          color: wesYellow,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Settings',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesYellow,
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
+            bottomNavigatorTabs(context)
           ],
         ),
       ),
     ));
+  }
+
+  Container bottomNavigatorTabs(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(
+        color: wesGreen,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => HomepageScreen()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.home,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Home',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              /*            Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const ShopScreen())); */
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.shopping_cart,
+                  color: wesWhite,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Shop',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesWhite,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const PayDuesScreen()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.money,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Pay Dues',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const SettingsScreen()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.settings,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Settings',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      const UserProfileScreen()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.account_circle,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'User Profile',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _applyFilters() {

@@ -39,14 +39,14 @@ Future<AllProjectsModel> get_all_projects(
   }
 }
 
-class AllProjects extends StatefulWidget {
-  const AllProjects({super.key});
+class AllProjectsScreen extends StatefulWidget {
+  const AllProjectsScreen({super.key});
 
   @override
-  State<AllProjects> createState() => _AllProjectsState();
+  State<AllProjectsScreen> createState() => _AllProjectsScreenState();
 }
 
-class _AllProjectsState extends State<AllProjects> {
+class _AllProjectsScreenState extends State<AllProjectsScreen> {
   List<Projects> _allProjects = [];
   int _currentPage = 1;
   Map<String, String>? _filters;
@@ -240,7 +240,6 @@ class _AllProjectsState extends State<AllProjects> {
                             }
                             return InkWell(
                               onTap: () {
-                                
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -289,7 +288,13 @@ class _AllProjectsState extends State<AllProjects> {
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               image: DecorationImage(
-                                                image: NetworkImage(hostName + allProjects[index].projectImages![0].image.toString(),),
+                                                image: NetworkImage(
+                                                  hostName +
+                                                      allProjects[index]
+                                                          .projectImages![0]
+                                                          .image
+                                                          .toString(),
+                                                ),
                                                 fit: BoxFit.cover,
                                               ),
                                               borderRadius:
