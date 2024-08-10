@@ -39,6 +39,8 @@ dependencies:
   country_picker:
   pin_code_text_field:
   http:
+  intl:
+
 
 
 

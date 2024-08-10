@@ -146,7 +146,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     ),
                   ),
                   Text(
-                    'Events',
+                    'Notifications',
                     style: TextStyle(
                         height: 1,
                         color: wesWhite,
