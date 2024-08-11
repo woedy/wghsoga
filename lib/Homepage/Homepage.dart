@@ -135,7 +135,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           child: Container(
                         child: ListView(
                           children: [
-                            allUsersSection(context, all_users),
+                            allUsersSection(context, all_users, user_data),
                             const SizedBox(
                               height: 10,
                             ),
@@ -311,7 +311,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     );
   }
 
-  Container allUsersSection(BuildContext context, all_users) {
+  Container allUsersSection(BuildContext context, all_users, user_data) {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(10),
@@ -326,8 +326,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '05 Year Group',
+              Text(
+                user_data.yearGroup + ' Year Group',
                 style: TextStyle(
                     height: 1,
                     color: wesYellow,

@@ -3,17 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:wghsoga_app/Auth/Register/models/verify_email.dart';
+import 'package:wghsoga_app/Auth/UpdateProfile/UpdateOption.dart';
 import 'package:wghsoga_app/Components/error_dialog.dart';
 import 'package:wghsoga_app/Components/keyboard_utils.dart';
 import 'package:wghsoga_app/Components/loading_dialog.dart';
 import 'package:wghsoga_app/Components/sucess_dialog.dart';
 import 'package:wghsoga_app/Homepage/Homepage.dart';
+import 'package:wghsoga_app/Onboarding/onboarding.dart';
 import 'package:wghsoga_app/constants.dart';
 import 'package:http/http.dart' as http;
 
 Future<VerifyEmailModel> verify_email(String email, String email_token) async {
   final response = await http.post(
-    Uri.parse(hostName + "/api/accounts/verify-email/"),
+    Uri.parse(hostName + "/api/accounts/verify-user-email/"),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json'
@@ -79,31 +81,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: wesGreen,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.4),
-                            blurRadius: 2,
-                            offset: Offset(2, 4), // Shadow position
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: wesYellow,
-                        ),
-                      ),
-                    ),
-                  ),
+                  Container(),
                   Image(
                       height: 50,
                       image: AssetImage('assets/images/geyhey_logo.png'))
@@ -186,7 +164,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                     highlightPinBoxColor: Colors.transparent,
                                     pinBoxColor: Colors.transparent,
                                     pinBoxRadius: 10,
-                                    keyboardType: TextInputType.text,
+                                    keyboardType: TextInputType.number,
                                     maxLength: 4,
                                     //maskCharacter: "😎",
                                     onTextChanged: (text) {
@@ -251,6 +229,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   _formKey.currentState!.save();
                   KeyboardUtil.hideKeyboard(context);
 
+                  print('#################');
+                  print(email_token);
+
                   _futureVerifyEmail =
                       verify_email(widget.data['email'], email_token);
                 }
@@ -288,7 +269,10 @@ class _VerifyEmailState extends State<VerifyEmail> {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomepageScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => UpdateOption(
+                            data: widget.data,
+                          )),
                 );
 
                 showDialog(
@@ -301,7 +285,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               });
             } else if (data.message == "Errors") {
               String? errorKey = snapshot.data!.errors!.keys.firstWhere(
-                (key) => key == "email",
+                (key) => key == "email" || key == "email_token",
                 orElse: () => null!,
               );
               if (errorKey != null) {

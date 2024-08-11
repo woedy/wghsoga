@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wghsoga_app/Auth/Register/Register1.dart';
+import 'package:wghsoga_app/Auth/Register/VerifyEmail.dart';
 import 'package:wghsoga_app/Homepage/Homepage.dart';
 import 'package:wghsoga_app/Shop/Shop.dart';
 
@@ -61,7 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           //return AllUsersScreen();
           //return ShopScreen();
-          return HomepageScreen();
+          return VerifyEmail(data: {
+            'email': 'hshdhdh@gmail.com', 
+          'first_name': 'Etttoorr'},);
 
           //
           //return api_key == null ? SplashScreen() : HomepageScreen();

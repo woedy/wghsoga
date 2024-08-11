@@ -20,6 +20,14 @@ Future<RegisterUserModel> register_user(data) async {
     },
     body: jsonEncode({
       "email": data['email'],
+      "first_name": data['first_name'],
+      "middle_name": data['middle_name'],
+      "last_name": data['last_name'],
+      "username": data['username'],
+      "year_group": data['year_group'],
+      "phone": data['phone'],
+      "password": data['password'],
+      "password2": data['password2'],
     }),
   );
 
@@ -66,7 +74,7 @@ class _Register4State extends State<Register4> {
         body: Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/wes_back.png'),
               fit: BoxFit.cover)),
@@ -83,7 +91,7 @@ class _Register4State extends State<Register4> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      padding: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: wesGreen,
                         borderRadius: BorderRadius.circular(10),
@@ -91,11 +99,11 @@ class _Register4State extends State<Register4> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.4),
                             blurRadius: 2,
-                            offset: Offset(2, 4), // Shadow position
+                            offset: const Offset(2, 4), // Shadow position
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.arrow_back,
                           color: wesYellow,
@@ -103,233 +111,254 @@ class _Register4State extends State<Register4> {
                       ),
                     ),
                   ),
-                  Image(
+                  const Image(
                       height: 50,
                       image: AssetImage('assets/images/geyhey_logo.png'))
                 ],
               ),
             ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Add Password',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesWhite,
-                              fontSize: 62,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Text(
-                          'Secure your account.',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesWhite,
-                              fontSize: 28,
-                              fontFamily: 'Montserrat'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    margin: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Form(
-                      key: _formKey,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  decoration: BoxDecoration(
-                                      //color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color:
-                                              Colors.white.withOpacity(0.1))),
-                                  child: TextFormField(
-                                    style: TextStyle(color: Colors.white),
-                                    decoration: InputDecoration(
-                                        //hintText: 'Enter Password',
-                                        suffixIcon: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              show_password = !show_password;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            show_password
-                                                ? Icons.remove_red_eye_outlined
-                                                : Icons.remove_red_eye,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        hintStyle: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.normal),
-                                        labelText: "Password",
-                                        labelStyle: TextStyle(
-                                            fontSize: 13, color: bodyText2),
-                                        enabledBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: wesWhite)),
-                                        focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: wesWhite)),
-                                        border: InputBorder.none),
-                                    inputFormatters: [
-                                      LengthLimitingTextInputFormatter(225),
-                                      PasteTextInputFormatter(),
-                                    ],
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Password is required';
-                                      }
-                                      if (!RegExp(
-                                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[-!@#\$%^&*_()\-+=/.,<>?"~`£{}|:;])')
-                                          .hasMatch(value)) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                "- Password must be at least 8 characters long\n- Must include at least one uppercase letter,\n- One lowercase letter, one digit,\n- And one special character"),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                        return '';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                        password = value;
-                                      });
-                                    },
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: show_password ? false : true,
-                                    onSaved: (value) {
-                                      setState(() {
-                                        password = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  decoration: BoxDecoration(
-                                      //color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color:
-                                              Colors.white.withOpacity(0.1))),
-                                  child: TextFormField(
-                                    style: TextStyle(color: Colors.white),
-                                    decoration: InputDecoration(
-                                        //hintText: 'Enter Password',
-                                        suffixIcon: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              show_password = !show_password;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            show_password
-                                                ? Icons.remove_red_eye_outlined
-                                                : Icons.remove_red_eye,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        hintStyle: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.normal),
-                                        labelText: "Re-Enter Password",
-                                        labelStyle: TextStyle(
-                                            fontSize: 13, color: bodyText2),
-                                        enabledBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: wesWhite)),
-                                        focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: wesWhite)),
-                                        border: InputBorder.none),
-                                    inputFormatters: [
-                                      LengthLimitingTextInputFormatter(225),
-                                      PasteTextInputFormatter(),
-                                    ],
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Password is required';
-                                      }
-
-                                      if (value != password) {
-                                        return 'Passwords do not match';
-                                      }
-                                      return null;
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                        password_confirmation = value;
-                                      });
-                                    },
-                                    textInputAction: TextInputAction.next,
-                                    obscureText: show_password ? false : true,
-                                    onSaved: (value) {
-                                      setState(() {
-                                        password_confirmation = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                              ],
-                            ),
                             Text(
-                                "- Password must be at least 8 characters long\n- Must include at least one uppercase letter,\n- One lowercase letter, one digit,\n- And one special character",
-                                style: TextStyle(color: wesYellow)),
+                              'Add Password',
+                              style: TextStyle(
+                                  height: 1,
+                                  color: wesWhite,
+                                  fontSize: 62,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w400),
+                            ),
                             SizedBox(
                               height: 50,
+                            ),
+                            Text(
+                              'Secure your account.',
+                              style: TextStyle(
+                                  height: 1,
+                                  color: wesWhite,
+                                  fontSize: 28,
+                                  fontFamily: 'Montserrat'),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 30,
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        margin: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Form(
+                          key: _formKey,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      decoration: BoxDecoration(
+                                          //color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border: Border.all(
+                                              color: Colors.white
+                                                  .withOpacity(0.1))),
+                                      child: TextFormField(
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                        decoration: InputDecoration(
+                                            //hintText: 'Enter Password',
+                                            suffixIcon: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  show_password =
+                                                      !show_password;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                show_password
+                                                    ? Icons
+                                                        .remove_red_eye_outlined
+                                                    : Icons.remove_red_eye,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            hintStyle: const TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.normal),
+                                            labelText: "Password",
+                                            labelStyle: const TextStyle(
+                                                fontSize: 13, color: bodyText2),
+                                            enabledBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: wesWhite)),
+                                            focusedBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: wesWhite)),
+                                            border: InputBorder.none),
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(225),
+                                          PasteTextInputFormatter(),
+                                        ],
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return 'Password is required';
+                                          }
+                                          if (!RegExp(
+                                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[-!@#\$%^&*_()\-+=/.,<>?"~`£{}|:;])')
+                                              .hasMatch(value)) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    "- Password must be at least 8 characters long\n- Must include at least one uppercase letter,\n- One lowercase letter, one digit,\n- And one special character"),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                            return '';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (value) {
+                                          setState(() {
+                                            password = value;
+                                          });
+                                        },
+                                        textInputAction: TextInputAction.next,
+                                        obscureText:
+                                            show_password ? false : true,
+                                        onSaved: (value) {
+                                          setState(() {
+                                            password = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      decoration: BoxDecoration(
+                                          //color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border: Border.all(
+                                              color: Colors.white
+                                                  .withOpacity(0.1))),
+                                      child: TextFormField(
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                        decoration: InputDecoration(
+                                            //hintText: 'Enter Password',
+                                            suffixIcon: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  show_password =
+                                                      !show_password;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                show_password
+                                                    ? Icons
+                                                        .remove_red_eye_outlined
+                                                    : Icons.remove_red_eye,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            hintStyle: const TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.normal),
+                                            labelText: "Re-Enter Password",
+                                            labelStyle: const TextStyle(
+                                                fontSize: 13, color: bodyText2),
+                                            enabledBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide:
+                                                        const BorderSide(
+                                                            color: wesWhite)),
+                                            focusedBorder:
+                                                const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: wesWhite)),
+                                            border: InputBorder.none),
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(225),
+                                          PasteTextInputFormatter(),
+                                        ],
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return 'Password is required';
+                                          }
+
+                                          if (value != password) {
+                                            return 'Passwords do not match';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (value) {
+                                          setState(() {
+                                            password_confirmation = value;
+                                          });
+                                        },
+                                        textInputAction: TextInputAction.next,
+                                        obscureText:
+                                            show_password ? false : true,
+                                        onSaved: (value) {
+                                          setState(() {
+                                            password_confirmation = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+                                  ],
+                                ),
+                                const Text(
+                                    "- Password must be at least 8 characters long\n- Must include at least one uppercase letter,\n- One lowercase letter, one digit,\n- And one special character",
+                                    style: TextStyle(color: wesYellow)),
+                                const SizedBox(
+                                  height: 50,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -345,14 +374,16 @@ class _Register4State extends State<Register4> {
                   widget.data['password'] = password;
                   widget.data['password2'] = password_confirmation;
 
+                  print(widget.data);
+
                   _futureRegisterUser = register_user(widget.data);
                 }
               },
               child: Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: wesYellow),
-                child: Center(
+                decoration: const BoxDecoration(color: wesYellow),
+                child: const Center(
                   child: Text(
                     'Continue',
                     style: TextStyle(fontSize: 15, color: wesGreen),
@@ -371,7 +402,7 @@ class _Register4State extends State<Register4> {
         future: _futureRegisterUser,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingDialogBox(
+            return const LoadingDialogBox(
               text: 'Please Wait..',
             );
           } else if (snapshot.hasData) {
@@ -381,10 +412,11 @@ class _Register4State extends State<Register4> {
 
             if (data.message == "Successful") {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                Navigator.pushReplacement(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                       builder: (context) => VerifyEmail(data: widget.data)),
+                  (route) => false, // Remove all previous routes
                 );
 
                 /*         showDialog(
@@ -397,9 +429,15 @@ class _Register4State extends State<Register4> {
               });
             } else if (data.message == "Errors") {
               String? errorKey = snapshot.data!.errors!.keys.firstWhere(
-
-                (key) => key == "email",
-                
+                (key) =>
+                    key == "password" ||
+                    key == "email" ||
+                    key == "first_name" ||
+                    key == "year_group" ||
+                    key == "phone" ||
+                    key == "last_name" ||
+                    key == "password" ||
+                    key == "password2",
                 orElse: () => null!,
               );
               if (errorKey != null) {
@@ -424,7 +462,7 @@ class _Register4State extends State<Register4> {
             }
           }
 
-          return LoadingDialogBox(
+          return const LoadingDialogBox(
             text: 'Please Wait..',
           );
         });

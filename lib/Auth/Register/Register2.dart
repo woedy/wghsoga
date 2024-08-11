@@ -11,7 +11,7 @@ import 'package:wghsoga_app/Components/loading_dialog.dart';
 import 'package:wghsoga_app/constants.dart';
 import 'package:http/http.dart' as http;
 
-Future<VerifyEmailModel> validate_email(String email) async {
+Future<VerifyEmailModel> validate_email(String email, String phone) async {
   final response = await http.post(
     Uri.parse(hostName + "/api/accounts/validate-email/"),
     headers: <String, String>{
@@ -20,6 +20,7 @@ Future<VerifyEmailModel> validate_email(String email) async {
     },
     body: jsonEncode({
       "email": email,
+      "phone": phone,
     }),
   );
 
@@ -54,6 +55,7 @@ class _Register2State extends State<Register2> {
   var _selectedCountry;
   var email;
   var username;
+  var phone;
 
   @override
   Widget build(BuildContext context) {
@@ -111,216 +113,276 @@ class _Register2State extends State<Register2> {
               ),
             ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Let\'s get \nstarted',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesWhite,
-                              fontSize: 62,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w400),
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        Text(
-                          'Tell us More',
-                          style: TextStyle(
-                              height: 1,
-                              color: wesWhite,
-                              fontSize: 28,
-                              fontFamily: 'Montserrat'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    margin: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                                //color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    color: Colors.white.withOpacity(0.1))),
-                            child: TextFormField(
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                //hintText: 'Enter Username/Email',
-
-                                hintStyle: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.normal),
-                                labelText: "Email",
-                                labelStyle:
-                                    TextStyle(fontSize: 13, color: bodyText2),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: wesWhite)),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: wesWhite)),
-                                border: InputBorder.none,
-                              ),
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(225),
-                                PasteTextInputFormatter(),
-                              ],
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Email is required';
-                                }
-                                if (value.length < 3) {
-                                  return 'Name too short';
-                                }
-                                String pattern =
-                                    r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-                                    r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-                                    r"{0,253}[a-zA-Z0-9])?)*$";
-                                RegExp regex = RegExp(pattern);
-                                if (!regex.hasMatch(value))
-                                  return 'Enter a valid email address';
-
-                                return null;
-                              },
-                              textInputAction: TextInputAction.next,
-                              autofocus: false,
-                              onSaved: (value) {
-                                setState(() {
-                                  email = value!.toLowerCase();
-                                });
-                              },
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Let\'s get \nstarted',
+                              style: TextStyle(
+                                  height: 1,
+                                  color: wesWhite,
+                                  fontSize: 62,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w400),
                             ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                                //color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    color: Colors.white.withOpacity(0.1))),
-                            child: TextFormField(
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                //hintText: 'Enter Username/Email',
-
-                                hintStyle: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.normal),
-                                labelText: "Username (Nickname)",
-                                labelStyle:
-                                    TextStyle(fontSize: 13, color: bodyText2),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: wesWhite)),
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: wesWhite)),
-                                border: InputBorder.none,
-                              ),
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(225),
-                                PasteTextInputFormatter(),
-                              ],
-                              validator: (value) {},
-                              textInputAction: TextInputAction.next,
-                              autofocus: false,
-                              onSaved: (value) {
-                                setState(() {
-                                  username = value;
-                                });
-                              },
+                            SizedBox(
+                              height: 50,
                             ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              showCountryPicker(
-                                  context: context,
-                                  showPhoneCode: true,
-                                  onSelect: (Country country) {
+                            Text(
+                              'Tell us More ' + widget.data['first_name'],
+                              style: TextStyle(
+                                  height: 1,
+                                  color: wesWhite,
+                                  fontSize: 28,
+                                  fontFamily: 'Montserrat'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        margin: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                    //color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.1))),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    //hintText: 'Enter Username/Email',
+
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.normal),
+                                    labelText: "Email",
+                                    labelStyle: TextStyle(
+                                        fontSize: 13, color: bodyText2),
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: wesWhite)),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: wesWhite)),
+                                    border: InputBorder.none,
+                                  ),
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(225),
+                                    PasteTextInputFormatter(),
+                                  ],
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Email is required';
+                                    }
+                                    if (value.length < 3) {
+                                      return 'Name too short';
+                                    }
+                                    String pattern =
+                                        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                                        r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                                        r"{0,253}[a-zA-Z0-9])?)*$";
+                                    RegExp regex = RegExp(pattern);
+                                    if (!regex.hasMatch(value))
+                                      return 'Enter a valid email address';
+
+                                    return null;
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                  autofocus: false,
+                                  onSaved: (value) {
                                     setState(() {
-                                      _selectedCountry = country;
+                                      email = value!.toLowerCase();
                                     });
                                   },
-                                  countryListTheme: CountryListThemeData(
-                                      textStyle: TextStyle(color: Colors.black),
-                                      searchTextStyle:
-                                          TextStyle(color: Colors.black)));
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10),
-                              decoration: BoxDecoration(
-                                  //color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                      color: Colors.white.withOpacity(0.1))),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                    //color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.1))),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    //hintText: 'Enter Username/Email',
+
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.normal),
+                                    labelText: "Username (Nickname)",
+                                    labelStyle: TextStyle(
+                                        fontSize: 13, color: bodyText2),
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: wesWhite)),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: wesWhite)),
+                                    border: InputBorder.none,
+                                  ),
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(225),
+                                    PasteTextInputFormatter(),
+                                  ],
+                                  validator: (value) {},
+                                  textInputAction: TextInputAction.next,
+                                  autofocus: false,
+                                  onSaved: (value) {
+                                    setState(() {
+                                      username = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  showCountryPicker(
+                                      context: context,
+                                      showPhoneCode: true,
+                                      onSelect: (Country country) {
+                                        setState(() {
+                                          _selectedCountry = country;
+                                        });
+                                      },
+                                      countryListTheme: CountryListThemeData(
+                                          textStyle:
+                                              TextStyle(color: Colors.black),
+                                          searchTextStyle:
+                                              TextStyle(color: Colors.black)));
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  decoration: BoxDecoration(
+                                      //color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                          color:
+                                              Colors.white.withOpacity(0.1))),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        _selectedCountry != null
-                                            ? _selectedCountry.flagEmoji
-                                            : '',
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.w300),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            _selectedCountry != null
+                                                ? _selectedCountry.flagEmoji
+                                                : '',
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w300),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            _selectedCountry == null
+                                                ? 'Select Country'
+                                                : _selectedCountry.name,
+                                            style: TextStyle(color: wesWhite),
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        _selectedCountry == null
-                                            ? 'Select Country'
-                                            : _selectedCountry.name,
-                                        style: TextStyle(color: wesWhite),
+                                      Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: wesWhite,
                                       ),
                                     ],
                                   ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: wesWhite,
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                decoration: BoxDecoration(
+                                    //color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.1))),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.normal),
+                                    labelText: "Phone",
+                                    labelStyle: TextStyle(
+                                        fontSize: 13, color: bodyText2),
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: wesWhite)),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: wesWhite)),
+                                    border: InputBorder.none,
+                                  ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(225),
+                                    PasteTextInputFormatter(),
+                                  ],
+                                  keyboardType: TextInputType.phone,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter a phone number';
+                                    }
+                                    final phoneNumberPattern =
+                                        RegExp(r'^\d{10}$');
+                                    if (!phoneNumberPattern.hasMatch(value)) {
+                                      return 'Please enter a valid 10-digit phone number';
+                                    }
+                                    return null;
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                  autofocus: false,
+                                  onSaved: (value) {
+                                    setState(() {
+                                      phone = value;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
                           SizedBox(
                             height: 30,
                           ),
                         ],
-                      ),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 30,
                       ),
                     ],
                   ),
@@ -333,7 +395,7 @@ class _Register2State extends State<Register2> {
                   _formKey.currentState!.save();
                   KeyboardUtil.hideKeyboard(context);
 
-                  _futureValidateEmail = validate_email(email!);
+                  _futureValidateEmail = validate_email(email!, phone);
                 }
               },
               child: Container(
@@ -356,71 +418,77 @@ class _Register2State extends State<Register2> {
 
   FutureBuilder<VerifyEmailModel> buildFutureBuilder() {
     return FutureBuilder<VerifyEmailModel>(
-        future: _futureValidateEmail,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingDialogBox(
-              text: 'Please Wait..',
+      future: _futureValidateEmail,
+      builder: (context, snapshot) {
+        // Handle different connection states
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingDialogBox(text: 'Please Wait..');
+        }
+
+        // Check for errors
+        if (snapshot.hasError) {
+          return ErrorDialogBox(text: 'An unexpected error occurred.');
+        }
+
+        // Check if data is available
+        if (snapshot.hasData) {
+          var data = snapshot.data!;
+          widget.data['email'] = email;
+
+          if (_selectedCountry == null) {
+            widget.data['country'] = null;
+          } else {
+            widget.data['country'] = _selectedCountry.name.toString();
+          }
+          widget.data['username'] = username;
+          widget.data['phone'] = phone;
+          // Handle success case
+          if (data.message == "Successful") {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Register3(
+                          data: widget.data,
+                        )),
+              );
+            });
+          }
+
+          // Handle error case
+          if (data.message == "Errors") {
+            String? errorKey = data.errors?.keys.firstWhere(
+              (key) => key == "phone" || key == "email",
+              orElse: () => null!,
             );
-          } else if (snapshot.hasData) {
-            var data = snapshot.data!;
 
-            print("#########################");
-            //print(data.data!.token!);
-
-            widget.data['email'] = email;
-            widget.data['country'] = _selectedCountry;
-
-            if (data.message == "Successful") {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            if (errorKey != null) {
+              String customErrorMessage =
+                  data.errors?[errorKey]?.first ?? 'An error occurred.';
+              WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => Register3(data: widget.data)),
+                      builder: (context) => Register2(data: widget.data)),
                 );
 
-                /*         showDialog(
-                    barrierDismissible: true,
-                    context: context,
-                    builder: (BuildContext context) {
-                      // Show the dialog
-                      return SuccessDialogBox(text: " Successful");
-                    }); */
+                showDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ErrorDialogBox(text: customErrorMessage);
+                  },
+                );
               });
-            } else if (data.message == "Errors") {
-              String? errorKey = snapshot.data!.errors!.keys.firstWhere(
-                (key) => key == "email",
-                orElse: () => null!,
-              );
-              if (errorKey != null) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Register2(
-                                data: widget.data,
-                              )));
-
-                  String customErrorMessage =
-                      snapshot.data!.errors![errorKey]![0];
-                  showDialog(
-                      barrierDismissible: true,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return ErrorDialogBox(text: customErrorMessage);
-                      });
-                });
-              }
+              return SizedBox
+                  .shrink(); // Return an empty widget as navigation is handled
             }
           }
+        }
 
-          return LoadingDialogBox(
-            text: 'Please Wait..',
-          );
-        });
+        // Default fallback for any unhandled state
+        return LoadingDialogBox(text: 'Please Wait..');
+      },
+    );
   }
-
-
-
-
 }

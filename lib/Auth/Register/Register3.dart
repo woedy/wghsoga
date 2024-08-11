@@ -11,7 +11,13 @@ class Register3 extends StatefulWidget {
 }
 
 class _Register3State extends State<Register3> {
-  String? yearGroup = "1990";
+  String? yearGroup = "1960";
+
+  @override
+  void initState() {
+    yearGroup = '1960';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

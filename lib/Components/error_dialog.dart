@@ -28,11 +28,16 @@ class _ErrorDialogBoxState extends State<ErrorDialogBox> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error, color: Colors.red, size: 50,),
+              Icon(
+                Icons.error,
+                color: Colors.red,
+                size: 50,
+              ),
               SizedBox(height: 30), // Spacer
-              Text(widget.text,
+              Text(
+                widget.text,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 15, color: Colors.black),
               ), // Text
             ],
           ),

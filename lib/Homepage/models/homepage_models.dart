@@ -91,18 +91,21 @@ class Data {
 class UserData {
   String? firstName;
   String? photo;
+  String? yearGroup;
 
-  UserData({this.firstName, this.photo});
+  UserData({this.firstName, this.photo, this.yearGroup});
 
   UserData.fromJson(Map<String, dynamic> json) {
     firstName = json['first_name'];
     photo = json['photo'];
+    yearGroup = json['year_group'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['first_name'] = this.firstName;
     data['photo'] = this.photo;
+    data['year_group'] = this.yearGroup;
     return data;
   }
 }
