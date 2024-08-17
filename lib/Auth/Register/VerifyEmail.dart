@@ -41,6 +41,41 @@ Future<VerifyEmailModel> verify_email(String email, String email_token) async {
   }
 }
 
+Future<void> resendEmailVerification(String email, context) async {
+  final response = await http.post(
+    Uri.parse(hostName + "/api/accounts/resend-email-verification/"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json'
+    },
+    body: jsonEncode({
+      "email": email,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    // Email sent successfully
+    print('Verification email resent successfully');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessDialogBox(text: "Verification email resent successfully");
+      },
+    );
+  } else {
+    // Error occurred
+    print('Failed to resend verification email');
+    final error = jsonDecode(response.body);
+    String errorMessage = error['message'] ?? 'An error occurred';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorDialogBox(text: errorMessage);
+      },
+    );
+  }
+}
+
 class VerifyEmail extends StatefulWidget {
   final data;
   const VerifyEmail({super.key, required this.data});
@@ -199,13 +234,19 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             SizedBox(
                               height: 20,
                             ),
-                            Text(
-                              'Resend email verification',
-                              style: TextStyle(
-                                  height: 1,
-                                  color: wesYellow,
-                                  fontSize: 12,
-                                  fontFamily: 'Montserrat'),
+                            InkWell(
+                              onTap: () {
+                                resendEmailVerification(
+                                    widget.data['email'], context);
+                              },
+                              child: Text(
+                                'Resend email verification',
+                                style: TextStyle(
+                                    height: 1,
+                                    color: wesYellow,
+                                    fontSize: 12,
+                                    fontFamily: 'Montserrat'),
+                              ),
                             ),
                           ],
                         ),

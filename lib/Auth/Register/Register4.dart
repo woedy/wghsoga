@@ -34,7 +34,16 @@ Future<RegisterUserModel> register_user(data) async {
   if (response.statusCode == 200) {
     print(jsonDecode(response.body));
     final result = json.decode(response.body);
-    if (result != null) {}
+    if (result != null) {
+
+      print(result['data']['token'].toString());
+
+      await saveIDApiKey(result['data']['token'].toString());
+      await saveUserID(result['data']['user_id'].toString());
+
+      await saveUserData(result['data']);
+
+    }
     return RegisterUserModel.fromJson(jsonDecode(response.body));
   } else if (response.statusCode == 422 ||
       response.statusCode == 403 ||

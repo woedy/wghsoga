@@ -54,22 +54,6 @@ Future<SignInModel> signInUser(String email, String password) async {
   }
 }
 
-Future<bool> saveIDApiKey(String apiKey) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString("API_Key", apiKey);
-  return prefs.commit();
-}
-
-Future<bool> saveUserID(String apiKey) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString("USER_ID", apiKey);
-  return prefs.commit();
-}
-
-Future<void> saveUserData(Map<String, dynamic> userData) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('user_data', json.encode(userData));
-}
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

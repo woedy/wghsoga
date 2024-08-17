@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wghsoga_app/Auth/UpdateProfile/UpdatePhoto.dart';
+import 'package:wghsoga_app/Components/keyboard_utils.dart';
 import 'package:wghsoga_app/constants.dart';
 
 class UpdateBio extends StatefulWidget {
@@ -135,6 +138,11 @@ class _UpdateBioState extends State<UpdateBio> {
                                   maxLines: 4,
                                   textInputAction: TextInputAction.next,
                                   autofocus: false,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Bio is required or skip';
+                                    }
+                                  },
                                   onSaved: (value) {
                                     setState(() {
                                       bio = value;
@@ -164,11 +172,14 @@ class _UpdateBioState extends State<UpdateBio> {
             ),
             InkWell(
               onTap: () {
+                var update_data = {'bio': null};
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => UpdatePhoto(
                             data: widget.data,
+                            update_data: update_data,
                           )),
                 );
               },
@@ -186,16 +197,22 @@ class _UpdateBioState extends State<UpdateBio> {
             ),
             InkWell(
               onTap: () {
-                if (bio != null) {
-                  widget.data['bio'] = bio;
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  KeyboardUtil.hideKeyboard(context);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UpdatePhoto(
-                              data: widget.data,
-                            )),
-                  );
+                  if (bio != null) {
+                    Map<String, dynamic> update_data = {'bio': bio};
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdatePhoto(
+                                data: widget.data,
+                                update_data: update_data,
+                              )),
+                    );
+                  }
                 }
               },
               child: Container(

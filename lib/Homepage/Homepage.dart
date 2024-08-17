@@ -23,7 +23,8 @@ import 'package:http/http.dart' as http;
 
 Future<HomeDataModel> get_home_data() async {
   var token = await getApiPref();
-  var user_id = await getUserIDPref();
+  //var user_id = await getUserIDPref();
+  var user_id = '09ta2sse4w09eztznr0bso91h8qivxajddf1xfl2l54hk';
 
   final response = await http.get(
     // Uri.parse(hostName + "/api/shop/get-product-details/?product_id=" + user_id.toString()),

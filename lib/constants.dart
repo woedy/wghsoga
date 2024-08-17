@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,4 +47,25 @@ class PasteTextInputFormatter extends TextInputFormatter {
     // Allow pasting of text by returning the new value unchanged
     return newValue;
   }
+}
+
+
+
+
+
+Future<bool> saveIDApiKey(String apiKey) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("API_Key", apiKey);
+  return prefs.commit();
+}
+
+Future<bool> saveUserID(String apiKey) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("USER_ID", apiKey);
+  return prefs.commit();
+}
+
+Future<void> saveUserData(Map<String, dynamic> userData) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_data', json.encode(userData));
 }
