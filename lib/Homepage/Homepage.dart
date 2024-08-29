@@ -23,8 +23,8 @@ import 'package:http/http.dart' as http;
 
 Future<HomeDataModel> get_home_data() async {
   var token = await getApiPref();
-  //var user_id = await getUserIDPref();
-  var user_id = '09ta2sse4w09eztznr0bso91h8qivxajddf1xfl2l54hk';
+  var user_id = await getUserIDPref();
+  //var user_id = '09ta2sse4w09eztznr0bso91h8qivxajddf1xfl2l54hk';
 
   final response = await http.get(
     // Uri.parse(hostName + "/api/shop/get-product-details/?product_id=" + user_id.toString()),
@@ -32,9 +32,7 @@ Future<HomeDataModel> get_home_data() async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
-
+      'Authorization': 'Token $token',
       //'Authorization': 'Token '  + token.toString()
     },
   );
@@ -71,6 +69,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Future<HomeDataModel>? _futureHomeData;
 
   int currentHour = DateTime.now().hour;
+  var user_photo;
 
   // Determine the greeting based on the current hour
   String? greeting;
@@ -80,6 +79,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     _futureHomeData = get_home_data();
     super.initState();
 
+    _loadPhoto();
     // Get the current hour
 
     if (currentHour < 12) {
@@ -89,6 +89,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
     } else {
       greeting = 'Good Evening..';
     }
+  }
+
+  Future<void> _loadPhoto() async {
+    final photo = await getUserPhoto();
+    setState(() {
+      user_photo = photo?.replaceAll('"', '');
+    });
   }
 
   @override
@@ -118,6 +125,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
             var all_events = homedata.events!;
             var all_projects = homedata.projects!;
             var all_news = homedata.news!;
+
+            saveUserPhoto(user_data.photo!);
 
             if (data.message == "Successful") {
               return Scaffold(
@@ -282,8 +291,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   image: DecorationImage(
-                                    image: NetworkImage(
-                                        hostName + user_data.photo!),
+                                    image: NetworkImage(hostName + user_photo),
                                     fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.circular(500),
@@ -360,89 +368,99 @@ class _HomepageScreenState extends State<HomepageScreen> {
           Container(
             height: 100,
             //color: Colors.red,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: all_users.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) => UserDetailScreen(
-                                  user_id: all_users[index].userId,
-                                )));
-                      },
-                      child: Column(
+            child: all_users.isEmpty
+                ? Container(
+                    child: Center(
+                      child: Text('No User Available'),
+                    ),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: all_users.length,
+                    itemBuilder: (context, index) {
+                      return Row(
                         children: [
-                          Stack(
-                            children: [
-                              Container(
-                                height: 75,
-                                width: 75,
-                                decoration: BoxDecoration(
-                                  color: wesYellow,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 2,
-                                      offset:
-                                          const Offset(2, 4), // Shadow position
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      UserDetailScreen(
+                                        user_id: all_users[index].userId,
+                                      )));
+                            },
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 75,
+                                      width: 75,
+                                      decoration: BoxDecoration(
+                                        color: wesYellow,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 2,
+                                            offset: const Offset(
+                                                2, 4), // Shadow position
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      left: 1,
+                                      right: 1,
+                                      child: Container(
+                                        height: 71,
+                                        width: 71,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          image: DecorationImage(
+                                            image: NetworkImage(hostName +
+                                                all_users[index].photo),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              blurRadius: 2,
+                                              offset: const Offset(
+                                                  2, 4), // Shadow position
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                left: 1,
-                                right: 1,
-                                child: Container(
-                                  height: 71,
-                                  width: 71,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          hostName + all_users[index].photo),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 2,
-                                        offset: const Offset(
-                                            2, 4), // Shadow position
-                                      ),
-                                    ],
-                                  ),
+                                SizedBox(
+                                  height: 7,
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  all_users[index].firstName,
+                                  style: TextStyle(
+                                      height: 1,
+                                      color: wesWhite,
+                                      fontSize: 14,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: 7,
-                          ),
-                          Text(
-                            all_users[index].firstName,
-                            style: TextStyle(
-                                height: 1,
-                                color: wesWhite,
-                                fontSize: 14,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w300),
+                          const SizedBox(
+                            width: 10,
                           ),
                         ],
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                );
-              },
-            ),
+                      );
+                    },
+                  ),
           )
         ],
       ),
@@ -496,126 +514,138 @@ class _HomepageScreenState extends State<HomepageScreen> {
           Container(
             height: 150,
             //color: Colors.red,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: all_events.length,
-              itemBuilder: (context, index) {
-                DateTime date = DateTime.parse(all_events[index].eventDate);
+            child: all_events.isEmpty
+                ? Container(
+                    child: Center(
+                      child: Text('No Event Available'),
+                    ),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: all_events.length,
+                    itemBuilder: (context, index) {
+                      DateTime date =
+                          DateTime.parse(all_events[index].eventDate);
 
-                return Row(
-                  children: [
-                    Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) => EventDetails(
-                                      event_id: all_events[index].eventId,
-                                    )));
-                          },
-                          child: Stack(
+                      return Row(
+                        children: [
+                          Column(
                             children: [
-                              Container(
-                                height: 120,
-                                width: 180,
-                                decoration: BoxDecoration(
-                                  color: wesYellow,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 2,
-                                      offset:
-                                          const Offset(2, 4), // Shadow position
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                left: 1,
-                                right: 1,
-                                child: Container(
-                                  height: 117,
-                                  width: 170,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      image: NetworkImage(hostName +
-                                          all_events[index].eventImage),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 2,
-                                        offset: const Offset(
-                                            2, 4), // Shadow position
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                top: 10,
-                                child: Column(
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          EventDetails(
+                                            event_id: all_events[index].eventId,
+                                          )));
+                                },
+                                child: Stack(
                                   children: [
-                                    StrokedText(
-                                      text: date.day.toString(),
-                                      strokeWidth: 5.0,
-                                      strokeColor: wesGreen,
-                                      textColor: wesYellow,
-                                      fontSize: 48.0,
+                                    Container(
+                                      height: 120,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        color: wesYellow,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 2,
+                                            offset: const Offset(
+                                                2, 4), // Shadow position
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    StrokedText(
-                                      text: DateFormat('MMMM').format(
-                                          DateTime.parse(date.toString())),
-                                      strokeWidth: 5.0,
-                                      strokeColor: wesGreen,
-                                      textColor: wesWhite,
-                                      fontSize: 20.0,
+                                    Positioned(
+                                      top: 0,
+                                      left: 1,
+                                      right: 1,
+                                      child: Container(
+                                        height: 117,
+                                        width: 170,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          image: DecorationImage(
+                                            image: NetworkImage(hostName +
+                                                all_events[index].eventImage),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              blurRadius: 2,
+                                              offset: const Offset(
+                                                  2, 4), // Shadow position
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                    StrokedText(
-                                      text: date.year.toString(),
-                                      strokeWidth: 5.0,
-                                      strokeColor: wesGreen,
-                                      textColor: wesWhite,
-                                      fontSize: 20.0,
-                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      top: 10,
+                                      child: Column(
+                                        children: [
+                                          StrokedText(
+                                            text: date.day.toString(),
+                                            strokeWidth: 5.0,
+                                            strokeColor: wesGreen,
+                                            textColor: wesYellow,
+                                            fontSize: 48.0,
+                                          ),
+                                          StrokedText(
+                                            text: DateFormat('MMMM').format(
+                                                DateTime.parse(
+                                                    date.toString())),
+                                            strokeWidth: 5.0,
+                                            strokeColor: wesGreen,
+                                            textColor: wesWhite,
+                                            fontSize: 20.0,
+                                          ),
+                                          StrokedText(
+                                            text: date.year.toString(),
+                                            strokeWidth: 5.0,
+                                            strokeColor: wesGreen,
+                                            textColor: wesWhite,
+                                            fontSize: 20.0,
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                              )
+                              ),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              Container(
+                                  width: 180,
+                                  child: Text(
+                                    all_events[index].title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        height: 1,
+                                        color: wesWhite,
+                                        fontSize: 14,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.w500),
+                                  )),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 7,
-                        ),
-                        Container(
-                            width: 180,
-                            child: Text(
-                              all_events[index].title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  height: 1,
-                                  color: wesWhite,
-                                  fontSize: 14,
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w500),
-                            )),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                );
-              },
-            ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
           )
         ],
       ),
@@ -670,113 +700,124 @@ class _HomepageScreenState extends State<HomepageScreen> {
           Container(
             height: 230,
             //color: Colors.red,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: all_news.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) => NewsDetails(
-                                      news_id: all_news[index].newsId,
-                                    )));
-                          },
-                          child: Stack(
+            child: all_news.isEmpty
+                ? Container(
+                    child: Center(
+                      child: Text('No News Available'),
+                    ),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: all_news.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: 180,
-                                width: 240,
-                                decoration: BoxDecoration(
-                                  color: wesYellow,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 2,
-                                      offset:
-                                          const Offset(2, 4), // Shadow position
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          NewsDetails(
+                                            news_id: all_news[index].newsId,
+                                          )));
+                                },
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 180,
+                                      width: 240,
+                                      decoration: BoxDecoration(
+                                        color: wesYellow,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 2,
+                                            offset: const Offset(
+                                                2, 4), // Shadow position
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      left: 1,
+                                      right: 1,
+                                      child: Container(
+                                        height: 180,
+                                        width: 240,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          image: DecorationImage(
+                                            image: NetworkImage(hostName +
+                                                all_news[index].newsImage),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              blurRadius: 2,
+                                              offset: const Offset(
+                                                  2, 4), // Shadow position
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Positioned(
-                                top: 0,
-                                left: 1,
-                                right: 1,
-                                child: Container(
-                                  height: 180,
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
                                   width: 240,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          hostName + all_news[index].newsImage),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 2,
-                                        offset: const Offset(
-                                            2, 4), // Shadow position
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        all_news[index].title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: wesYellow,
+                                            fontSize: 14,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        all_news[index].content,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: wesWhite,
+                                            fontSize: 10,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w300),
                                       ),
                                     ],
-                                  ),
-                                ),
-                              ),
+                                  )),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                            width: 240,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  all_news[index].title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      height: 1,
-                                      color: wesYellow,
-                                      fontSize: 14,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  all_news[index].content,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      height: 1,
-                                      color: wesWhite,
-                                      fontSize: 10,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            )),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                );
-              },
-            ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
           )
         ],
       ),
@@ -831,114 +872,126 @@ class _HomepageScreenState extends State<HomepageScreen> {
           Container(
             height: 250,
             //color: Colors.red,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: all_projects.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    ProjectDetails(
-                                      project_id: all_projects[index].projectId,
-                                    )));
-                          },
-                          child: Stack(
+            child: all_projects.isEmpty
+                ? Container(
+                    child: Center(
+                      child: Text('No Project Available'),
+                    ),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: all_projects.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: 200,
-                                width: 330,
-                                decoration: BoxDecoration(
-                                  color: wesYellow,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 2,
-                                      offset:
-                                          const Offset(2, 4), // Shadow position
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          ProjectDetails(
+                                            project_id:
+                                                all_projects[index].projectId,
+                                          )));
+                                },
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 200,
+                                      width: 330,
+                                      decoration: BoxDecoration(
+                                        color: wesYellow,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 2,
+                                            offset: const Offset(
+                                                2, 4), // Shadow position
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      left: 1,
+                                      right: 1,
+                                      child: Container(
+                                        height: 200,
+                                        width: 330,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          image: DecorationImage(
+                                            image: NetworkImage(hostName +
+                                                all_projects[index]
+                                                    .projectImage),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              blurRadius: 2,
+                                              offset: const Offset(
+                                                  2, 4), // Shadow position
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Positioned(
-                                top: 0,
-                                left: 1,
-                                right: 1,
-                                child: Container(
-                                  height: 200,
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
                                   width: 330,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                      image: NetworkImage(hostName +
-                                          all_projects[index].projectImage),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 2,
-                                        offset: const Offset(
-                                            2, 4), // Shadow position
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        all_projects[index].title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: wesYellow,
+                                            fontSize: 14,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        all_projects[index].details,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: wesWhite,
+                                            fontSize: 10,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w300),
                                       ),
                                     ],
-                                  ),
-                                ),
-                              ),
+                                  )),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                            width: 330,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  all_projects[index].title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      height: 1,
-                                      color: wesYellow,
-                                      fontSize: 14,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  all_projects[index].details,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      height: 1,
-                                      color: wesWhite,
-                                      fontSize: 10,
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            )),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                );
-              },
-            ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
           )
         ],
       ),

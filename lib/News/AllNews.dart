@@ -29,8 +29,7 @@ Future<AllNewsModel> get_all_news(
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
       //'Authorization': 'Token '  + token.toString()
     },
   );
@@ -200,11 +199,10 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              NewsDetails(
-                                                  news_id: allNews[index]
-                                                      .newsId
-                                                      .toString())));
+                                          builder: (context) => NewsDetails(
+                                              news_id: allNews[index]
+                                                  .newsId
+                                                  .toString())));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10),

@@ -37,23 +37,28 @@ class _Register1State extends State<Register1> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: wesGreen,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.4),
-                          blurRadius: 2,
-                          offset: const Offset(2, 4), // Shadow position
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: wesGreen,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            blurRadius: 2,
+                            offset: const Offset(2, 4), // Shadow position
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: wesYellow,
                         ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: wesYellow,
                       ),
                     ),
                   ),
@@ -320,11 +325,12 @@ class _Register1State extends State<Register1> {
                   };
                   print('############################################');
                   print(payload);
-          Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Register2(data: payload,)));
-
-
-
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Register2(
+                                data: payload,
+                              )));
                 }
               },
               child: Container(

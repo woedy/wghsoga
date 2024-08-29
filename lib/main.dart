@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wghsoga_app/Auth/UpdateProfile/UpdateBio.dart';
-import 'package:wghsoga_app/Auth/UpdateProfile/UpdateInterests.dart';
-
+import 'package:wghsoga_app/Homepage/Homepage.dart';
+import 'package:wghsoga_app/SplashScreen/spalsh_screen.dart';
 
 import 'package:wghsoga_app/theme.dart';
 
@@ -13,7 +12,7 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((value) => {runApp(MyApp())});
+      .then((value) => {runApp(const MyApp())});
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'WGHSOGA',
         theme: theme(),
-        home: MyHomePage(),
+        home: const MyHomePage(),
       ),
     );
   }
@@ -60,13 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           //return AllUsersScreen();
           //return ShopScreen();
-          return UpdateBio(data: {
-            'email': 'hshdhdh@gmail.com', 
-          'first_name': 'Etttoorr'},
-   );
-
+          //return const SplashScreen();
           //
-          //return api_key == null ? SplashScreen() : HomepageScreen();
+          return api_key == null ? SplashScreen() : HomepageScreen();
           //return ServiceDetails(service_id: 'SER-2342',service_name: "Welo Bello", service_rating: "4.8", shop_location: "Accra", open: true, service_price: "\$ 2,345", service_photo: "null",);
         });
   }

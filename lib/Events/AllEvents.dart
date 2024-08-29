@@ -28,7 +28,7 @@ Future<AllEventsModel> get_all_events(
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
       'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+          'Token $token', //+ token.toString()
       //'Authorization': 'Token '  + token.toString()
     },
   );

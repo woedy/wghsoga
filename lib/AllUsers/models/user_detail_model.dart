@@ -23,8 +23,9 @@ class Data {
   int? id;
   UserProfile? userProfile;
   List<String>? userInterests;
+  List<String>? userPhotos;
   String? password;
-  Null? lastLogin;
+  String? lastLogin;
   String? userId;
   String? email;
   String? username;
@@ -33,12 +34,12 @@ class Data {
   String? lastName;
   String? phone;
   String? yearGroup;
-  Null? fcmToken;
-  Null? otpCode;
+  String? fcmToken;
+  String? otpCode;
   String? emailToken;
   bool? emailVerified;
   String? photo;
-  Null? dob;
+  String? dob;
   bool? maritalStatus;
   String? country;
   String? language;
@@ -46,9 +47,9 @@ class Data {
   bool? profileComplete;
   bool? verified;
   bool? isArchived;
-  Null? locationName;
-  Null? lat;
-  Null? lng;
+  String? locationName;
+  String? lat;
+  String? lng;
   bool? isActive;
   bool? staff;
   bool? admin;
@@ -56,38 +57,39 @@ class Data {
 
   Data(
       {this.id,
-        this.userProfile,
-        this.userInterests,
-        this.password,
-        this.lastLogin,
-        this.userId,
-        this.email,
-        this.username,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.phone,
-        this.yearGroup,
-        this.fcmToken,
-        this.otpCode,
-        this.emailToken,
-        this.emailVerified,
-        this.photo,
-        this.dob,
-        this.maritalStatus,
-        this.country,
-        this.language,
-        this.aboutMe,
-        this.profileComplete,
-        this.verified,
-        this.isArchived,
-        this.locationName,
-        this.lat,
-        this.lng,
-        this.isActive,
-        this.staff,
-        this.admin,
-        this.timestamp});
+      this.userProfile,
+      this.userInterests,
+      this.userPhotos,
+      this.password,
+      this.lastLogin,
+      this.userId,
+      this.email,
+      this.username,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.phone,
+      this.yearGroup,
+      this.fcmToken,
+      this.otpCode,
+      this.emailToken,
+      this.emailVerified,
+      this.photo,
+      this.dob,
+      this.maritalStatus,
+      this.country,
+      this.language,
+      this.aboutMe,
+      this.profileComplete,
+      this.verified,
+      this.isArchived,
+      this.locationName,
+      this.lat,
+      this.lng,
+      this.isActive,
+      this.staff,
+      this.admin,
+      this.timestamp});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -95,6 +97,7 @@ class Data {
         ? new UserProfile.fromJson(json['user_profile'])
         : null;
     userInterests = json['user_interests'].cast<String>();
+    userPhotos = json['user_photos'].cast<String>();
     password = json['password'];
     lastLogin = json['last_login'];
     userId = json['user_id'];
@@ -134,6 +137,7 @@ class Data {
       data['user_profile'] = this.userProfile!.toJson();
     }
     data['user_interests'] = this.userInterests;
+    data['user_photos'] = this.userPhotos;
     data['password'] = this.password;
     data['last_login'] = this.lastLogin;
     data['user_id'] = this.userId;
@@ -192,25 +196,25 @@ class UserProfile {
 
   UserProfile(
       {this.id,
-        this.profileId,
-        this.profession,
-        this.jobTitle,
-        this.placeOfWork,
-        this.city,
-        this.house,
-        this.website,
-        this.linkedIn,
-        this.instagram,
-        this.facebook,
-        this.twitter,
-        this.profileComplete,
-        this.verified,
-        this.isDeleted,
-        this.active,
-        this.createdAt,
-        this.updatedAt,
-        this.user,
-        this.room});
+      this.profileId,
+      this.profession,
+      this.jobTitle,
+      this.placeOfWork,
+      this.city,
+      this.house,
+      this.website,
+      this.linkedIn,
+      this.instagram,
+      this.facebook,
+      this.twitter,
+      this.profileComplete,
+      this.verified,
+      this.isDeleted,
+      this.active,
+      this.createdAt,
+      this.updatedAt,
+      this.user,
+      this.room});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     id = json['id'];

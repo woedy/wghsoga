@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:wghsoga_app/Components/loading_dialog.dart';
 import 'package:wghsoga_app/Components/stoke_text.dart';
 import 'package:wghsoga_app/Events/models/event_detail_model.dart';
@@ -17,8 +18,7 @@ Future<EventDetailModel> get_event_detail(user_id) async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
 
       //'Authorization': 'Token '  + token.toString()
     },
@@ -53,8 +53,7 @@ class EventDetails extends StatefulWidget {
 }
 
 class _EventDetailsState extends State<EventDetails> {
-
-    Future<EventDetailModel>? _futureEventDetails;
+  Future<EventDetailModel>? _futureEventDetails;
 
   @override
   void initState() {
@@ -83,6 +82,8 @@ class _EventDetailsState extends State<EventDetails> {
             var data = snapshot.data!;
 
             var events_detail = data.data!;
+
+            DateTime date = DateTime.parse(events_detail.eventDate!);
 
             if (data.message == "Successful") {
               return Scaffold(
@@ -188,8 +189,9 @@ class _EventDetailsState extends State<EventDetails> {
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           image: DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/nyahan.png'),
+                                            image: NetworkImage(hostName +
+                                                '/media/' +
+                                                events_detail.eventImages![0]),
                                             fit: BoxFit.cover,
                                           ),
                                           borderRadius:
@@ -220,42 +222,52 @@ class _EventDetailsState extends State<EventDetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Column(
-                                      children: [
-                                        StrokedText(
-                                          text: '25',
-                                          strokeWidth: 5.0,
-                                          strokeColor: wesGreen,
-                                          textColor: wesYellow,
-                                          fontSize: 48.0,
-                                        ),
-                                        StrokedText(
-                                          text: 'September',
-                                          strokeWidth: 5.0,
-                                          strokeColor: wesGreen,
-                                          textColor: wesWhite,
-                                          fontSize: 20.0,
-                                        ),
-                                        StrokedText(
-                                          text: '2024',
-                                          strokeWidth: 5.0,
-                                          strokeColor: wesGreen,
-                                          textColor: wesWhite,
-                                          fontSize: 20.0,
-                                        ),
-                                      ],
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        children: [
+                                          StrokedText(
+                                            text: date.day.toString(),
+                                            strokeWidth: 5.0,
+                                            strokeColor: wesGreen,
+                                            textColor: wesYellow,
+                                            fontSize: 48.0,
+                                          ),
+                                          StrokedText(
+                                            text: DateFormat('MMMM').format(
+                                                DateTime.parse(
+                                                    date.toString())),
+                                            strokeWidth: 5.0,
+                                            strokeColor: wesGreen,
+                                            textColor: wesWhite,
+                                            fontSize: 20.0,
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          StrokedText(
+                                            text: date.year.toString(),
+                                            strokeWidth: 1.0,
+                                            strokeColor: wesYellow,
+                                            textColor: wesWhite,
+                                            fontSize: 20.0,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 20,
                                     ),
                                     Expanded(
+                                      flex: 3,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            '2024 Old School Reunion',
+                                            events_detail.title ?? '',
                                             style: TextStyle(
                                                 height: 1,
                                                 color: wesYellow,
@@ -279,7 +291,7 @@ class _EventDetailsState extends State<EventDetails> {
                                             height: 5,
                                           ),
                                           Text(
-                                            'Virtual Education in Ghana:',
+                                            events_detail.theme ?? '',
                                             style: TextStyle(
                                                 height: 1,
                                                 color: wesWhite,
@@ -291,7 +303,7 @@ class _EventDetailsState extends State<EventDetails> {
                                             height: 5,
                                           ),
                                           Text(
-                                            'Harnessing the Prospects for National Development.',
+                                            events_detail.subject ?? '',
                                             style: TextStyle(
                                                 height: 1,
                                                 color: wesWhite,
@@ -328,7 +340,7 @@ class _EventDetailsState extends State<EventDetails> {
                                     Expanded(
                                         flex: 3,
                                         child: Text(
-                                          '10:00 AM;',
+                                          events_detail.eventTime ?? '',
                                           style: TextStyle(
                                             height: 1,
                                             color: wesWhite,
@@ -359,7 +371,7 @@ class _EventDetailsState extends State<EventDetails> {
                                     Expanded(
                                         flex: 3,
                                         child: Text(
-                                          'Assembly Hall (Virtual – Live on Facebook)',
+                                          events_detail.venue ?? '',
                                           style: TextStyle(
                                             height: 1,
                                             color: wesWhite,
@@ -390,7 +402,7 @@ class _EventDetailsState extends State<EventDetails> {
                                     Expanded(
                                         flex: 3,
                                         child: Text(
-                                          '95 year group.',
+                                          events_detail.organisedBy ?? '',
                                           style: TextStyle(
                                             height: 1,
                                             color: wesWhite,
@@ -399,6 +411,85 @@ class _EventDetailsState extends State<EventDetails> {
                                           ),
                                         )),
                                   ],
+                                ),
+
+                                const SizedBox(
+                                  height: 30,
+                                ),
+
+                                ///PHOTOS
+
+                                Container(
+                                  height: 100,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount:
+                                          events_detail.eventImages!.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          margin: EdgeInsets.all(3),
+                                          height: 100,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              color: wesWhite,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              image: DecorationImage(
+                                                  image: NetworkImage(hostName +
+                                                      '/media/' +
+                                                      events_detail
+                                                          .eventImages![index]),
+                                                  fit: BoxFit.cover)),
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+
+                                ///Videos
+
+                                Container(
+                                  height: 100,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount:
+                                          events_detail.eventVideos!.length,
+                                      itemBuilder: (context, index) {
+                                        return Stack(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.all(3),
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  color: wesWhite,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(hostName +
+                                                          '/media/' +
+                                                          events_detail
+                                                                  .eventVideos![
+                                                              index]),
+                                                      fit: BoxFit.cover)),
+                                            ),
+                                            Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                top: 0,
+                                                bottom: 0,
+                                                child: Icon(
+                                                  Icons.play_arrow,
+                                                  color: wesYellow,
+                                                  size: 50,
+                                                ))
+                                          ],
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(
+                                  height: 20,
                                 ),
                               ],
                             ),
@@ -579,5 +670,4 @@ class _EventDetailsState extends State<EventDetails> {
   void dispose() {
     super.dispose();
   }
-
 }

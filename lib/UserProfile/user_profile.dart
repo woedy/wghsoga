@@ -11,7 +11,6 @@ Future<UserDetailModel> get_user_detail() async {
   var token = await getApiPref();
   var user_id = await getUserIDPref();
 
-
   final response = await http.get(
     Uri.parse(hostName +
         "/api/accounts/get-user-details/?user_id=" +
@@ -19,8 +18,7 @@ Future<UserDetailModel> get_user_detail() async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
 
       //'Authorization': 'Token '  + token.toString()
     },
@@ -46,7 +44,9 @@ Future<UserDetailModel> get_user_detail() async {
 }
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({super.key});
+  const UserProfileScreen({
+    super.key,
+  });
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -127,70 +127,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 ),
                               ),
                             ),
-                            Container(
-                              height: 65,
-                              width: 65,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          height: 65,
-                                          width: 65,
-                                          decoration: BoxDecoration(
-                                            color: wesYellow,
-                                            borderRadius:
-                                                BorderRadius.circular(500),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.2),
-                                                blurRadius: 2,
-                                                offset: const Offset(
-                                                    2, 4), // Shadow position
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 0,
-                                          left: 0,
-                                          right: 0,
-                                          child: Container(
-                                            height: 60,
-                                            width: 60,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              image: DecorationImage(
-                                                image: NetworkImage(hostName +
-                                                    user_detail.photo
-                                                        .toString()),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(500),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
-                                                  blurRadius: 2,
-                                                  offset: const Offset(
-                                                      2, 4), // Shadow position
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            Container(),
                           ],
                         ),
                       ),
@@ -211,7 +148,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                             padding: const EdgeInsets.all(20),
 
                                             margin: const EdgeInsets.only(
-                                                top: 90,
+                                                top: 70,
                                                 left: 20,
                                                 right: 20,
                                                 bottom: 0),
@@ -230,15 +167,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.end,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.message_rounded,
-                                                      color: wesYellow,
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 20,
+                                                  children: [],
                                                 ),
                                                 Expanded(
                                                   child: SingleChildScrollView(
@@ -250,12 +179,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                       child: Column(
                                                         children: [
                                                           const SizedBox(
-                                                            height: 70,
+                                                            height: 80,
                                                           ),
                                                           Column(
                                                             children: [
                                                               Text(
                                                                 "${user_detail.firstName ?? ""} ${user_detail.middleName ?? ""} ${user_detail.lastName ?? ""}",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
                                                                 style: const TextStyle(
                                                                     height: 1,
                                                                     color:
@@ -544,7 +476,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                             .w500),
                                                               ),
                                                               const SizedBox(
-                                                                height: 15,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -586,7 +518,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -628,7 +560,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -670,7 +602,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -712,7 +644,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                             ],
                                                           ),
@@ -739,13 +671,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                             .w500),
                                                               ),
                                                               const SizedBox(
-                                                                height: 15,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/web.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/web.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -771,13 +705,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/linkedin.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/linkedin.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -803,13 +739,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/insta.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/insta.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -835,13 +773,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/facebook.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/facebook.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -869,7 +809,41 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                               const SizedBox(
                                                                 height: 30,
                                                               ),
+
+                                                              ///PHOTOS
                                                             ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          Container(
+                                                            height: 100,
+                                                            child: ListView
+                                                                .builder(
+                                                                    scrollDirection:
+                                                                        Axis
+                                                                            .horizontal,
+                                                                    itemCount: user_detail
+                                                                        .userPhotos!
+                                                                        .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return Container(
+                                                                        margin:
+                                                                            EdgeInsets.all(3),
+                                                                        height:
+                                                                            100,
+                                                                        width:
+                                                                            100,
+                                                                        decoration: BoxDecoration(
+                                                                            color:
+                                                                                wesWhite,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            image: DecorationImage(image: NetworkImage(hostName + '/media/' + user_detail.userPhotos![index]), fit: BoxFit.cover)),
+                                                                      );
+                                                                    }),
                                                           ),
                                                           const SizedBox(
                                                             height: 20,
@@ -966,153 +940,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        decoration: BoxDecoration(
-                          color: wesGreen,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(
-                                  0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          //crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
-                      */
-                              },
-                              child: const Column(
-                                children: [
-                                  Icon(
-                                    Icons.home,
-                                    color: wesYellow,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Home',
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: wesYellow,
-                                        fontSize: 12,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
-                              },
-                              child: const Column(
-                                children: [
-                                  Icon(
-                                    Icons.shopping_cart,
-                                    color: wesYellow,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Shop',
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: wesYellow,
-                                        fontSize: 12,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
-                              },
-                              child: const Column(
-                                children: [
-                                  Icon(
-                                    Icons.money,
-                                    color: wesYellow,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Pay Dues',
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: wesYellow,
-                                        fontSize: 12,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
-                              },
-                              child: const Column(
-                                children: [
-                                  Icon(
-                                    Icons.settings,
-                                    color: wesYellow,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Settings',
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: wesYellow,
-                                        fontSize: 12,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
-                              },
-                              child: const Column(
-                                children: [
-                                  Icon(
-                                    Icons.account_circle,
-                                    color: wesYellow,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'Settings',
-                                    style: TextStyle(
-                                        height: 1,
-                                        color: wesYellow,
-                                        fontSize: 12,
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                      bottomNavigator()
                     ],
                   ),
                 ),
@@ -1124,6 +952,155 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             text: 'Please Wait..',
           );
         });
+  }
+
+  Container bottomNavigator() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(
+        color: wesGreen,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          InkWell(
+            onTap: () {
+              /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
+                    */
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.home,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Home',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.shopping_cart,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Shop',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.money,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Pay Dues',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.settings,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Settings',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
+            },
+            child: const Column(
+              children: [
+                Icon(
+                  Icons.account_circle,
+                  color: wesYellow,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Settings',
+                  style: TextStyle(
+                      height: 1,
+                      color: wesYellow,
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void dispose() {

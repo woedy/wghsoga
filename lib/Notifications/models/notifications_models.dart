@@ -1,10 +1,10 @@
-class AllUsersModel {
+class NotificationsModel {
   String? message;
   Data? data;
 
-  AllUsersModel({this.message, this.data});
+  NotificationsModel({this.message, this.data});
 
-  AllUsersModel.fromJson(Map<String, dynamic> json) {
+  NotificationsModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
@@ -20,16 +20,16 @@ class AllUsersModel {
 }
 
 class Data {
-  List<Users>? users;
+  List<Notifications>? notifications;
   Pagination? pagination;
 
-  Data({this.users, this.pagination});
+  Data({this.notifications, this.pagination});
 
   Data.fromJson(Map<String, dynamic> json) {
-    if (json['users'] != null) {
-      users = <Users>[];
-      json['users'].forEach((v) {
-        users!.add(new Users.fromJson(v));
+    if (json['notifications'] != null) {
+      notifications = <Notifications>[];
+      json['notifications'].forEach((v) {
+        notifications!.add(new Notifications.fromJson(v));
       });
     }
     pagination = json['pagination'] != null
@@ -39,8 +39,9 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.users != null) {
-      data['users'] = this.users!.map((v) => v.toJson()).toList();
+    if (this.notifications != null) {
+      data['notifications'] =
+          this.notifications!.map((v) => v.toJson()).toList();
     }
     if (this.pagination != null) {
       data['pagination'] = this.pagination!.toJson();
@@ -49,43 +50,47 @@ class Data {
   }
 }
 
-class Users {
-  String? userId;
-  String? firstName;
-  String? middleName;
-  String? lastName;
-  String? email;
-  String? photo;
-  String? house;
+class Notifications {
+  int? id;
+  String? subject;
+  String? content;
+  bool? read;
+  bool? active;
+  String? createdAt;
+  String? updatedAt;
+  int? user;
 
-  Users(
-      {this.userId,
-      this.email,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.house,
-      this.photo});
+  Notifications(
+      {this.id,
+      this.subject,
+      this.content,
+      this.read,
+      this.active,
+      this.createdAt,
+      this.updatedAt,
+      this.user});
 
-  Users.fromJson(Map<String, dynamic> json) {
-    userId = json['user_id'];
-    firstName = json['first_name'];
-    middleName = json['middle_name'];
-    lastName = json['last_name'];
-    email = json['email'];
-     house = json['house'];
-    photo = json['photo'];
+  Notifications.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    subject = json['subject'];
+    content = json['content'];
+    read = json['read'];
+    active = json['active'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    user = json['user'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    data['first_name'] = this.firstName;
-    data['middle_name'] = this.middleName;
-    data['last_name'] = this.lastName;
-    data['email'] = this.email;
-       data['house'] = this.house;
-    data['photo'] = this.photo;
+    data['id'] = this.id;
+    data['subject'] = this.subject;
+    data['content'] = this.content;
+    data['read'] = this.read;
+    data['active'] = this.active;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['user'] = this.user;
     return data;
   }
 }

@@ -6,7 +6,8 @@ import 'package:wghsoga_app/AllUsers/models/all_users_model.dart';
 import 'package:wghsoga_app/constants.dart';
 import 'package:http/http.dart' as http;
 
-Future<AllUsersModel> get_all_users({int page = 1, Map<String, String>? filters, String? search_query}) async {
+Future<AllUsersModel> get_all_users(
+    {int page = 1, Map<String, String>? filters, String? search_query}) async {
   var token = await getApiPref();
 
   // Construct the query parameters from the filters map
@@ -17,20 +18,21 @@ Future<AllUsersModel> get_all_users({int page = 1, Map<String, String>? filters,
     });
   }
 
-  final String url = hostName + '/api/accounts/get-all-users/?search=${search_query ?? ''}&page=$page$filterQuery';
+  final String url = hostName +
+      '/api/accounts/get-all-users/?search=${search_query ?? ''}&page=$page$filterQuery';
 
   final response = await http.get(
     Uri.parse(url),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization': 'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
-  //'Authorization': 'Token '  + token.toString()
-
-  },
+      'Authorization': 'Token $token', //+ token.toString()
+      //'Authorization': 'Token '  + token.toString()
+    },
   );
 
   if (response.statusCode == 200) {
+    print(response.body);
     return AllUsersModel.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to load data');
@@ -52,7 +54,6 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
   int _totalPages = 1;
   Map<String, String>? _filters;
   String? _searchQuery;
-
 
   Future<AllUsersModel?> _fetchUsers({bool loadMore = false}) async {
     if (_isLoading) return Future.error('Loading in progress');
@@ -94,13 +95,11 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
     _futureAllUsers = _fetchUsers();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +113,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -138,14 +137,29 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                       ),
                     ),
                   ),
-                  Text('All Registered Old Girls', style: TextStyle(height: 1, color: wesWhite, fontSize: 18, fontFamily: 'Montserrat', fontWeight: FontWeight.w300),),
+                  Text(
+                    'All Registered Old Girls',
+                    style: TextStyle(
+                        height: 1,
+                        color: wesWhite,
+                        fontSize: 18,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w300),
+                  ),
                   Row(
                     children: [
                       const Image(
                         height: 50,
-                        image: AssetImage('assets/images/group_chat.png',), color: Colors.white,),
+                        image: AssetImage(
+                          'assets/images/group_chat.png',
+                        ),
+                        color: Colors.white,
+                      ),
                       IconButton(
-                        icon: Icon(Icons.filter_list, color: Colors.white,),
+                        icon: Icon(
+                          Icons.filter_list,
+                          color: Colors.white,
+                        ),
                         onPressed: _showFilterBottomSheet,
                       ),
                     ],
@@ -154,13 +168,14 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
               ),
             ),
 
-               //  Search Input
+            //  Search Input
 
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 decoration: const InputDecoration(
-                    labelText: 'Search', labelStyle: TextStyle(color: Colors.white),
+                  labelText: 'Search',
+                  labelStyle: TextStyle(color: Colors.white),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: wesWhite)),
                   focusedBorder: UnderlineInputBorder(
@@ -177,9 +192,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
               ),
             ),
 
-              // End Search Input
-
-
+            // End Search Input
 
             Expanded(
               child: FutureBuilder<AllUsersModel?>(
@@ -195,7 +208,9 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                     final allUsers = snapshot.data!.data!.users!;
                     return NotificationListener<ScrollNotification>(
                       onNotification: (ScrollNotification scrollInfo) {
-                        if (!_isLoading && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+                        if (!_isLoading &&
+                            scrollInfo.metrics.pixels ==
+                                scrollInfo.metrics.maxScrollExtent) {
                           if (_currentPage < _totalPages) {
                             _fetchUsers(loadMore: true);
                           }
@@ -210,29 +225,31 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                             return Center(child: CircularProgressIndicator());
                           }
                           return InkWell(
-                            onTap: (){
-
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => UserDetailScreen(user_id: allUsers[index].userId.toString()))
-                              );
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserDetailScreen(
+                                          user_id: allUsers[index]
+                                              .userId
+                                              .toString())));
                             },
                             child: Container(
                               padding: EdgeInsets.all(10),
                               margin: EdgeInsets.only(bottom: 3),
                               decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(10)
-                              ),
+                                  borderRadius: BorderRadius.circular(10)),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         width: 100,
                                         height: 100,
-
                                         child: Stack(
                                           children: [
                                             Container(
@@ -240,12 +257,15 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                                               width: 100,
                                               decoration: BoxDecoration(
                                                 color: wesYellow,
-                                                borderRadius: BorderRadius.circular(20),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black.withOpacity(0.2),
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
                                                     blurRadius: 2,
-                                                    offset: Offset(2, 4), // Shadow position
+                                                    offset: Offset(2,
+                                                        4), // Shadow position
                                                   ),
                                                 ],
                                               ),
@@ -260,15 +280,22 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   image: DecorationImage(
-                                                    image: NetworkImage(hostName + allUsers[index].photo!.toString()),
+                                                    image: NetworkImage(
+                                                        hostName +
+                                                            allUsers[index]
+                                                                .photo!
+                                                                .toString()),
                                                     fit: BoxFit.cover,
                                                   ),
-                                                  borderRadius: BorderRadius.circular(20),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.black.withOpacity(0.2),
+                                                      color: Colors.black
+                                                          .withOpacity(0.2),
                                                       blurRadius: 2,
-                                                      offset: Offset(2, 4), // Shadow position
+                                                      offset: Offset(2,
+                                                          4), // Shadow position
                                                     ),
                                                   ],
                                                 ),
@@ -284,35 +311,77 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                                             children: [
                                               Expanded(
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                              (allUsers[index].firstName  ?? "") + " " +
-                                                  (allUsers[index].middleName ?? "") + " " +
-                                                  (allUsers[index].lastName ?? "")
-                                                      , style: TextStyle(height: 1, color: wesWhite, fontSize: 16, fontFamily: 'Montserrat', fontWeight: FontWeight.w600),),
+                                                      (allUsers[index]
+                                                                  .firstName ??
+                                                              "") +
+                                                          " " +
+                                                          (allUsers[index]
+                                                                  .middleName ??
+                                                              "") +
+                                                          " " +
+                                                          (allUsers[index]
+                                                                  .lastName ??
+                                                              ""),
+                                                      style: TextStyle(
+                                                          height: 1,
+                                                          color: wesWhite,
+                                                          fontSize: 16,
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
                                                     SizedBox(
                                                       height: 5,
                                                     ),
-                                                    Text(allUsers[index].email!.toString() , style: TextStyle(height: 1, color: wesYellow, fontSize: 15, fontFamily: 'Montserrat',),),
-
+                                                    Text(
+                                                      allUsers[index]
+                                                          .email!
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        height: 1,
+                                                        color: wesYellow,
+                                                        fontSize: 15,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                      ),
+                                                    ),
                                                     SizedBox(
                                                       height: 5,
                                                     ),
-                                                    Text(allUsers[index].userProfile!.house ?? "", style: TextStyle(height: 1, color: wesYellow, fontSize: 14, fontFamily: 'Montserrat', fontWeight: FontWeight.w500),),
+                                                    Text(
+                                                     allUsers[index].house??
+                                                          "",
+                                                      style: TextStyle(
+                                                          height: 1,
+                                                          color: wesYellow,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
-
                                             ],
                                           ),
                                         ),
                                       ),
-
                                     ],
                                   ),
-
-                                  Text('View Details', style: TextStyle(height: 1, color: wesYellow, fontSize: 12, fontFamily: 'Montserrat'),),
+                                  Text(
+                                    'View Details',
+                                    style: TextStyle(
+                                        height: 1,
+                                        color: wesYellow,
+                                        fontSize: 12,
+                                        fontFamily: 'Montserrat'),
+                                  ),
                                 ],
                               ),
                             ),
@@ -330,9 +399,6 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
     );
   }
 
-
-
-
   void _applyFilters() {
     setState(() {
       _futureAllUsers = _fetchUsers();
@@ -341,7 +407,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
 
   void _resetFilters() {
     setState(() {
-      _filters = null;  // Reset filters
+      _filters = null; // Reset filters
       _searchQuery = null;
       _currentPage = 1;
       _futureAllUsers = _fetchUsers();
@@ -363,10 +429,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                 children: [
                   Text(
                     'Filters',
-                    style: TextStyle(
-                      color: wesGreen,
-                      fontSize: 18
-                    ),
+                    style: TextStyle(color: wesGreen, fontSize: 18),
                   ),
                   SizedBox(height: 16),
                   Container(
@@ -390,42 +453,43 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
-
                   Container(
-                   // padding: EdgeInsets.symmetric(horizontal: 10),
+                    // padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
-                      //color: Colors.white,
+                        //color: Colors.white,
                         borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                            color: Colors.white.withOpacity(0.1))),
+                        border:
+                            Border.all(color: Colors.white.withOpacity(0.1))),
                     child: TextFormField(
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         //hintText: 'Enter Username/Email',
 
                         hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.normal),
+                            color: Colors.grey, fontWeight: FontWeight.normal),
                         labelText: "City",
-                        labelStyle:
-                        TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5), fontWeight: FontWeight.w600),
+                        labelStyle: TextStyle(
+                            fontSize: 13,
+                            color: Colors.black.withOpacity(0.5),
+                            fontWeight: FontWeight.w600),
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: wesWhite)),
                         focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: wesWhite)),
-                        border: InputBorder.none,),
+                        border: InputBorder.none,
+                      ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(225),
                         PasteTextInputFormatter(),
                       ],
                       textInputAction: TextInputAction.next,
                       autofocus: false,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _filters = _filters ?? {};
-                            _filters!['city'] = newValue ?? '';
-                          });
-                        },
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _filters = _filters ?? {};
+                          _filters!['city'] = newValue ?? '';
+                        });
+                      },
                       onSaved: (value) {
                         setState(() {
                           //first_name = value;
@@ -433,11 +497,9 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                       },
                     ),
                   ),
-
                   SizedBox(height: 16),
                   Container(
                     width: MediaQuery.of(context).size.width,
-
                     child: DropdownButton<String>(
                       hint: Text("Select House"),
                       value: _filters?['house'],
@@ -465,16 +527,23 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                           Navigator.pop(context);
                           _applyFilters();
                         },
-                        child: Text('Apply Filters', style: TextStyle(color: wesGreen),),
+                        child: Text(
+                          'Apply Filters',
+                          style: TextStyle(color: wesGreen),
+                        ),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
                           _resetFilters();
                         },
-                        child: Text('Reset Filters', style: TextStyle(color: wesWhite),),
+                        child: Text(
+                          'Reset Filters',
+                          style: TextStyle(color: wesWhite),
+                        ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red, // Change color to indicate reset action
+                          backgroundColor: Colors
+                              .red, // Change color to indicate reset action
                         ),
                       ),
                     ],
@@ -487,5 +556,4 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
       },
     );
   }
-  
 }

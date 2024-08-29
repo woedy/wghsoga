@@ -35,6 +35,14 @@ Future<String?> getUserIDPref() async {
 
 
 
+Future<String?> getUserPhoto() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString("user_photo");
+}
+
+
+
+
 
 
 
@@ -68,4 +76,10 @@ Future<bool> saveUserID(String apiKey) async {
 Future<void> saveUserData(Map<String, dynamic> userData) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setString('user_data', json.encode(userData));
+}
+
+
+Future<void> saveUserPhoto(String userPhoto) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('user_photo', json.encode(userPhoto));
 }

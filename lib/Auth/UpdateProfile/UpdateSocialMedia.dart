@@ -399,7 +399,7 @@ class _UpdateSocialMediaState extends State<UpdateSocialMedia> {
                       _formKey.currentState!.save();
 
                       widget.update_data['website'] = website;
-                      widget.update_data['linkedin'] = linkedin;
+                      widget.update_data['linked_in'] = linkedin;
                       widget.update_data['instagram'] = instagram;
                       widget.update_data['facebook'] = facebook;
 

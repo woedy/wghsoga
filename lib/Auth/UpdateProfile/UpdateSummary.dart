@@ -23,20 +23,16 @@ Future<UpdateProfileModel> update_profile(data) async {
   // Add headers
   request.headers.addAll({
     // 'Authorization': 'Token $token', // Use your actual token here
-    'Authorization':
-        'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+    'Authorization': 'Token $token', //+ token.toString()
   });
 
   print('###################################');
   print(data['bio']);
 
   // Add fields
-  request.fields['user_id'] = '09ta2sse4w09eztznr0bso91h8qivxajddf1xfl2l54hk';
+  request.fields['user_id'] = userId.toString();
   request.fields['bio'] = data['bio'] ?? "";
 
-
-
-   
   // Serialize the list of interests
   if (data['interests'] != null && data['interests'] is List<String>) {
     request.fields['interests'] = jsonEncode(data['interests']);
@@ -44,7 +40,8 @@ Future<UpdateProfileModel> update_profile(data) async {
     request.fields['interests'] = jsonEncode([]);
   }
 
-  request.fields['job_title'] = data['job_title'] ?? "";
+  request.fields['profession'] = data['profession'] ?? "";
+    request.fields['job_title'] = data['job_title'] ?? "";
   request.fields['place_of_work'] = data['place_of_work'] ?? "";
   request.fields['house'] = data['house'] ?? "";
   request.fields['city'] = data['city'] ?? "";
@@ -219,6 +216,7 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                       children: [
                                         Text(
                                           "${widget.data['first_name'] ?? ""} ${widget.data['middle_name'] ?? ""} ${widget.data['last_name'] ?? ""}",
+                                          textAlign: TextAlign.center,
                                           style: const TextStyle(
                                               height: 1,
                                               color: wesWhite,
@@ -227,7 +225,7 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                               fontWeight: FontWeight.w400),
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          height: 10,
                                         ),
                                         Text(
                                           widget.data['email'] ?? "",
@@ -239,7 +237,7 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                               fontWeight: FontWeight.w300),
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          height: 10,
                                         ),
                                         Text(
                                           widget.data['year_group'] ?? "",
@@ -251,13 +249,13 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                                               fontWeight: FontWeight.w300),
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          height: 10,
                                         ),
                                         Text(
                                           widget.update_data['house'] ?? "",
                                           style: const TextStyle(
                                               height: 1,
-                                              color: wesWhite,
+                                              color: wesYellow,
                                               fontSize: 16,
                                               fontFamily: 'Montserrat',
                                               fontWeight: FontWeight.w300),
@@ -863,7 +861,7 @@ class _UpdateSummaryState extends State<UpdateSummary> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => UpdateSuccess(data:widget.data)),
+                      builder: (context) => UpdateSuccess(data: widget.data)),
                   (route) => false, // Remove all previous routes
                 );
 

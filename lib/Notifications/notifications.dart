@@ -1,40 +1,31 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:wghsoga_app/Events/EventDetails.dart';
+import 'package:wghsoga_app/Notifications/models/notifications_models.dart';
 import 'package:wghsoga_app/constants.dart';
-import 'package:wghsoga_app/Events/models/all_events_model.dart';
 
 import '../Components/stoke_text.dart';
 import 'package:http/http.dart' as http;
 
-Future<AllEventsModel> get_all_events(
-    {int page = 1, Map<String, String>? filters, String? search_query}) async {
+Future<NotificationsModel> get_all_notifications({int page = 1}) async {
   var token = await getApiPref();
-
-  // Construct the query parameters from the filters map
-  String filterQuery = '';
-  if (filters != null) {
-    filters.forEach((key, value) {
-      filterQuery += '&$key=$value';
-    });
-  }
+  var user_id = await getUserIDPref();
 
   final String url = hostName +
-      '/api/events/get-all-events/?search=${search_query ?? ''}&page=$page$filterQuery';
+      '/api/notifications/get-all-notifications/?user_id=p4vgixrh72xoqzsb1oy4jzy42yza0s135hwe&page=$page';
 
   final response = await http.get(
     Uri.parse(url),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
       //'Authorization': 'Token '  + token.toString()
     },
   );
 
   if (response.statusCode == 200) {
-    return AllEventsModel.fromJson(jsonDecode(response.body));
+    return NotificationsModel.fromJson(jsonDecode(response.body));
   } else {
     throw Exception('Failed to load data');
   }
@@ -48,15 +39,13 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  Future<AllEventsModel?>? _futureAllEvents;
-  List<Events> _allEvents = [];
+  Future<NotificationsModel?>? _futureAllNotifications;
+  List<Notifications> _allNotifications = [];
   bool _isLoading = false;
   int _currentPage = 1;
   int _totalPages = 1;
-  Map<String, String>? _filters;
-  String? _searchQuery;
 
-  Future<AllEventsModel?> _fetchEvents({bool loadMore = false}) async {
+  Future<NotificationsModel?> _fetchEvents({bool loadMore = false}) async {
     if (_isLoading) return Future.error('Loading in progress');
 
     setState(() {
@@ -64,29 +53,26 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     });
 
     try {
-      final eventsData = await get_all_events(
-        page: loadMore ? _currentPage + 1 : 1,
-        filters: _filters,
-        search_query: _searchQuery,
-      );
+      final notificationsData =
+          await get_all_notifications(page: loadMore ? _currentPage + 1 : 1);
 
       setState(() {
         if (loadMore) {
-          _allEvents.addAll(eventsData.data!.events!);
+          _allNotifications.addAll(notificationsData.data!.notifications!);
           _currentPage++;
         } else {
-          _allEvents = eventsData.data!.events!;
+          _allNotifications = notificationsData.data!.notifications!;
           _currentPage = 1;
         }
-        _totalPages = eventsData.data!.pagination!.totalPages!;
+        _totalPages = notificationsData.data!.pagination!.totalPages!;
         _isLoading = false;
       });
 
-      if (_allEvents.isEmpty) {
+      if (_allNotifications.isEmpty) {
         return null; // Return null when no event are available
       }
 
-      return eventsData;
+      return notificationsData;
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -99,7 +85,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    _futureAllEvents = _fetchEvents();
+    _futureAllNotifications = _fetchEvents();
   }
 
   @override
@@ -163,17 +149,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
             ),
             Expanded(
-                child: FutureBuilder<AllEventsModel?>(
-                    future: _futureAllEvents,
+                child: FutureBuilder<NotificationsModel?>(
+                    future: _futureAllNotifications,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (!snapshot.hasData || _allEvents.isEmpty) {
+                      } else if (!snapshot.hasData ||
+                          _allNotifications.isEmpty) {
                         return Center(child: Text('No Events available'));
                       } else {
-                        final allEvents = snapshot.data!.data!.events!;
+                        final allNotifications =
+                            snapshot.data!.data!.notifications!;
                         return NotificationListener<ScrollNotification>(
                           onNotification: (ScrollNotification scrollInfo) {
                             if (!_isLoading &&
@@ -187,158 +175,40 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             return false;
                           },
                           child: ListView.builder(
-                            itemCount: allEvents.length + (_isLoading ? 1 : 0),
+                            itemCount:
+                                allNotifications.length + (_isLoading ? 1 : 0),
                             itemBuilder: (context, index) {
-                              if (index == allEvents.length) {
+                              if (index == allNotifications.length) {
                                 return Center(
                                     child: CircularProgressIndicator());
                               }
                               return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EventDetails(
-                                              event_id: allEvents[index]
-                                                  .eventId
-                                                  .toString())));
-                                },
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(bottom: 3),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              Container(
-                                                height: 180,
-                                                // width: 100,
-                                                decoration: BoxDecoration(
-                                                  color: wesYellow,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.2),
-                                                      blurRadius: 2,
-                                                      offset: Offset(2,
-                                                          4), // Shadow position
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Positioned(
-                                                top: 0,
-                                                left: 1,
-                                                right: 1,
-                                                child: Container(
-                                                  height: 175,
-                                                  //width: 95,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          'assets/images/nyahan.png'),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.black
-                                                            .withOpacity(0.2),
-                                                        blurRadius: 2,
-                                                        offset: Offset(2,
-                                                            4), // Shadow position
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                        ],
-                                      ),
+                                onTap: () {},
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 5),
+                                  decoration: BoxDecoration(
+                                      color: wesWhite.withOpacity(0.1)),
+                                  child: ListTile(
+                                    title: Text(
+                                      allNotifications[index]
+                                          .subject
+                                          .toString(),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(20.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '2022 OGA Fundraising Dinner Dance towards...',
-                                                  style: TextStyle(
-                                                      height: 1,
-                                                      color: wesYellow,
-                                                      fontSize: 16,
-                                                      fontFamily: 'Montserrat',
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  'Support WGHS NSMQ team',
-                                                  style: TextStyle(
-                                                    height: 1,
-                                                    color: wesWhite,
-                                                    fontSize: 15,
-                                                    fontFamily: 'Montserrat',
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              StrokedText(
-                                                text: '25',
-                                                strokeWidth: 5.0,
-                                                strokeColor: wesGreen,
-                                                textColor: wesYellow,
-                                                fontSize: 48.0,
-                                              ),
-                                              StrokedText(
-                                                text: 'September',
-                                                strokeWidth: 5.0,
-                                                strokeColor: wesGreen,
-                                                textColor: wesWhite,
-                                                fontSize: 20.0,
-                                              ),
-                                              StrokedText(
-                                                text: '2024',
-                                                strokeWidth: 5.0,
-                                                strokeColor: wesGreen,
-                                                textColor: wesWhite,
-                                                fontSize: 20.0,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                                    subtitle: Text(
+                                        allNotifications[index]
+                                            .content
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        )),
+                                    leading: Icon(
+                                      Icons.notifications,
+                                      color: wesWhite,
+                                    ),
+                                  ),
                                 ),
                               );
                             },
@@ -500,16 +370,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _applyFilters() {
     setState(() {
-      _futureAllEvents = _fetchEvents();
+      _futureAllNotifications = _fetchEvents();
     });
   }
 
   void _resetFilters() {
     setState(() {
-      _filters = null; // Reset filters
-      _searchQuery = null;
       _currentPage = 1;
-      _futureAllEvents = _fetchEvents();
+      _futureAllNotifications = _fetchEvents();
     });
   }
 }

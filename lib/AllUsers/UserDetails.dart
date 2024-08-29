@@ -17,8 +17,7 @@ Future<UserDetailModel> get_user_detail(user_id) async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
 
       //'Authorization': 'Token '  + token.toString()
     },
@@ -210,7 +209,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                             padding: const EdgeInsets.all(20),
 
                                             margin: const EdgeInsets.only(
-                                                top: 90,
+                                                top: 70,
                                                 left: 20,
                                                 right: 20,
                                                 bottom: 0),
@@ -236,9 +235,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
                                                 Expanded(
                                                   child: SingleChildScrollView(
                                                     child: Container(
@@ -255,6 +251,9 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                             children: [
                                                               Text(
                                                                 "${user_detail.firstName ?? ""} ${user_detail.middleName ?? ""} ${user_detail.lastName ?? ""}",
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
                                                                 style: const TextStyle(
                                                                     height: 1,
                                                                     color:
@@ -543,7 +542,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                             .w500),
                                                               ),
                                                               const SizedBox(
-                                                                height: 15,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -585,7 +584,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -627,7 +626,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -669,7 +668,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
@@ -711,7 +710,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                             ],
                                                           ),
@@ -738,13 +737,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                             .w500),
                                                               ),
                                                               const SizedBox(
-                                                                height: 15,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/web.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/web.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -770,13 +771,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/linkedin.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/linkedin.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -802,13 +805,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/insta.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/insta.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -834,13 +839,15 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                                 ],
                                                               ),
                                                               const SizedBox(
-                                                                height: 30,
+                                                                height: 20,
                                                               ),
                                                               Row(
                                                                 children: [
                                                                   const Image(
-                                                                      image: AssetImage(
-                                                                          "assets/icons/facebook.png")),
+                                                                    image: AssetImage(
+                                                                        "assets/icons/facebook.png"),
+                                                                    height: 20,
+                                                                  ),
                                                                   const SizedBox(
                                                                     width: 20,
                                                                   ),
@@ -867,6 +874,39 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                                               ),
                                                               const SizedBox(
                                                                 height: 30,
+                                                              ),
+
+                                                              ///PHOTOS
+
+                                                              Container(
+                                                                height: 100,
+                                                                child: ListView
+                                                                    .builder(
+                                                                        scrollDirection:
+                                                                            Axis
+                                                                                .horizontal,
+                                                                        itemCount: user_detail
+                                                                            .userPhotos!
+                                                                            .length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return Container(
+                                                                            margin:
+                                                                                EdgeInsets.all(3),
+                                                                            height:
+                                                                                100,
+                                                                            width:
+                                                                                100,
+                                                                            decoration: BoxDecoration(
+                                                                                color: wesWhite,
+                                                                                borderRadius: BorderRadius.circular(10),
+                                                                                image: DecorationImage(image: NetworkImage(hostName + '/media/' + user_detail.userPhotos![index]), fit: BoxFit.cover)),
+                                                                          );
+                                                                        }),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 20,
                                                               ),
                                                             ],
                                                           ),

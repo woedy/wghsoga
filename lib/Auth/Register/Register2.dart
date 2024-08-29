@@ -69,8 +69,8 @@ class _Register2State extends State<Register2> {
         body: Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-          image: DecorationImage(
+      decoration: const BoxDecoration(
+          image: const DecorationImage(
               image: AssetImage('assets/images/wes_back.png'),
               fit: BoxFit.cover)),
       child: SafeArea(
@@ -86,7 +86,7 @@ class _Register2State extends State<Register2> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      padding: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: wesGreen,
                         borderRadius: BorderRadius.circular(10),
@@ -94,11 +94,11 @@ class _Register2State extends State<Register2> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.4),
                             blurRadius: 2,
-                            offset: Offset(2, 4), // Shadow position
+                            offset: const Offset(2, 4), // Shadow position
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.arrow_back,
                           color: wesYellow,
@@ -106,7 +106,7 @@ class _Register2State extends State<Register2> {
                       ),
                     ),
                   ),
-                  Image(
+                  const Image(
                       height: 50,
                       image: AssetImage('assets/images/geyhey_logo.png'))
                 ],
@@ -123,7 +123,7 @@ class _Register2State extends State<Register2> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Let\'s get \nstarted',
                               style: TextStyle(
                                   height: 1,
@@ -132,12 +132,12 @@ class _Register2State extends State<Register2> {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w400),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 50,
                             ),
                             Text(
                               'Tell us More ' + widget.data['first_name'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                   height: 1,
                                   color: wesWhite,
                                   fontSize: 28,
@@ -146,12 +146,12 @@ class _Register2State extends State<Register2> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Container(
-                        padding: EdgeInsets.all(20),
-                        margin: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
+                        margin: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(15)),
@@ -160,15 +160,16 @@ class _Register2State extends State<Register2> {
                           child: Column(
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
                                     //color: Colors.white,
                                     borderRadius: BorderRadius.circular(5),
                                     border: Border.all(
                                         color: Colors.white.withOpacity(0.1))),
                                 child: TextFormField(
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: const InputDecoration(
                                     //hintText: 'Enter Username/Email',
 
                                     hintStyle: TextStyle(
@@ -215,19 +216,20 @@ class _Register2State extends State<Register2> {
                                   },
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
                                     //color: Colors.white,
                                     borderRadius: BorderRadius.circular(5),
                                     border: Border.all(
                                         color: Colors.white.withOpacity(0.1))),
                                 child: TextFormField(
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: const InputDecoration(
                                     //hintText: 'Enter Username/Email',
 
                                     hintStyle: TextStyle(
@@ -258,7 +260,7 @@ class _Register2State extends State<Register2> {
                                   },
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                               InkWell(
@@ -271,14 +273,15 @@ class _Register2State extends State<Register2> {
                                           _selectedCountry = country;
                                         });
                                       },
-                                      countryListTheme: CountryListThemeData(
-                                          textStyle:
-                                              TextStyle(color: Colors.black),
-                                          searchTextStyle:
-                                              TextStyle(color: Colors.black)));
+                                      countryListTheme:
+                                          const CountryListThemeData(
+                                              textStyle: TextStyle(
+                                                  color: Colors.black),
+                                              searchTextStyle: TextStyle(
+                                                  color: Colors.black)));
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 10),
                                   decoration: BoxDecoration(
                                       //color: Colors.white,
@@ -296,22 +299,23 @@ class _Register2State extends State<Register2> {
                                             _selectedCountry != null
                                                 ? _selectedCountry.flagEmoji
                                                 : '',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 30,
                                                 fontWeight: FontWeight.w300),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Text(
                                             _selectedCountry == null
                                                 ? 'Select Country'
                                                 : _selectedCountry.name,
-                                            style: TextStyle(color: wesWhite),
+                                            style: const TextStyle(
+                                                color: wesWhite),
                                           ),
                                         ],
                                       ),
-                                      Icon(
+                                      const Icon(
                                         Icons.keyboard_arrow_down_rounded,
                                         color: wesWhite,
                                       ),
@@ -319,19 +323,20 @@ class _Register2State extends State<Register2> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
                                     //color: Colors.white,
                                     borderRadius: BorderRadius.circular(5),
                                     border: Border.all(
                                         color: Colors.white.withOpacity(0.1))),
                                 child: TextFormField(
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: const InputDecoration(
                                     hintStyle: TextStyle(
                                         color: Colors.grey,
                                         fontWeight: FontWeight.normal),
@@ -351,7 +356,7 @@ class _Register2State extends State<Register2> {
                                     LengthLimitingTextInputFormatter(225),
                                     PasteTextInputFormatter(),
                                   ],
-                                  keyboardType: TextInputType.phone,
+                                  keyboardType: TextInputType.number,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter a phone number';
@@ -376,7 +381,7 @@ class _Register2State extends State<Register2> {
                           ),
                         ),
                       ),
-                      Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
@@ -399,10 +404,10 @@ class _Register2State extends State<Register2> {
                 }
               },
               child: Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(color: wesYellow),
-                child: Center(
+                decoration: const BoxDecoration(color: wesYellow),
+                child: const Center(
                   child: Text(
                     'Continue',
                     style: TextStyle(fontSize: 15, color: wesGreen),
@@ -422,12 +427,12 @@ class _Register2State extends State<Register2> {
       builder: (context, snapshot) {
         // Handle different connection states
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingDialogBox(text: 'Please Wait..');
+          return const LoadingDialogBox(text: 'Please Wait..');
         }
 
         // Check for errors
         if (snapshot.hasError) {
-          return ErrorDialogBox(text: 'An unexpected error occurred.');
+          return const ErrorDialogBox(text: 'An unexpected error occurred.');
         }
 
         // Check if data is available
@@ -480,14 +485,14 @@ class _Register2State extends State<Register2> {
                   },
                 );
               });
-              return SizedBox
+              return const SizedBox
                   .shrink(); // Return an empty widget as navigation is handled
             }
           }
         }
 
         // Default fallback for any unhandled state
-        return LoadingDialogBox(text: 'Please Wait..');
+        return const LoadingDialogBox(text: 'Please Wait..');
       },
     );
   }
