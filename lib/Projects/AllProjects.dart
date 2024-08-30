@@ -26,15 +26,18 @@ Future<AllProjectsModel> get_all_projects(
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token $token', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
       //'Authorization': 'Token '  + token.toString()
     },
   );
 
   if (response.statusCode == 200) {
+    print('##################################');
+    print(response.body);
     return AllProjectsModel.fromJson(jsonDecode(response.body));
   } else {
+    print('##################################');
+    print(response.body);
     throw Exception('Failed to load data');
   }
 }
@@ -97,6 +100,7 @@ class _AllProjectsScreenState extends State<AllProjectsScreen> {
         _isLoading = false;
       });
 
+      print('##################################');
       return Future.error('Failed to load data');
     }
   }
@@ -290,10 +294,9 @@ class _AllProjectsScreenState extends State<AllProjectsScreen> {
                                               image: DecorationImage(
                                                 image: NetworkImage(
                                                   hostName +
+                                                      '/media/' +
                                                       allProjects[index]
-                                                          .projectImages![0]
-                                                          .image
-                                                          .toString(),
+                                                          .projectImages![0],
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),
@@ -319,6 +322,8 @@ class _AllProjectsScreenState extends State<AllProjectsScreen> {
                                       children: [
                                         Text(
                                           allProjects[index].title ?? "",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                             height: 1,
                                             color: wesYellow,
@@ -330,6 +335,8 @@ class _AllProjectsScreenState extends State<AllProjectsScreen> {
                                         const SizedBox(height: 10),
                                         Text(
                                           allProjects[index].details ?? "",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                             height: 1,
                                             color: wesWhite,

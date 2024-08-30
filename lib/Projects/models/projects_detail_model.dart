@@ -21,13 +21,14 @@ class ProjectDetailModel {
 
 class Data {
   int? id;
-  List<ProjectImages>? projectImages;
-  List<ProjectVideos>? projectVideos;
+  List<String>? projectImages;
+  List<String>? projectVideos;
   String? projectId;
   String? title;
   String? details;
   String? target;
   String? raised;
+  bool? draft;
   bool? isArchived;
   bool? active;
   String? createdAt;
@@ -42,6 +43,7 @@ class Data {
       this.details,
       this.target,
       this.raised,
+      this.draft,
       this.isArchived,
       this.active,
       this.createdAt,
@@ -49,23 +51,14 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if (json['project_images'] != null) {
-      projectImages = <ProjectImages>[];
-      json['project_images'].forEach((v) {
-        projectImages!.add(new ProjectImages.fromJson(v));
-      });
-    }
-    if (json['project_videos'] != null) {
-      projectVideos = <ProjectVideos>[];
-      json['project_videos'].forEach((v) {
-        projectVideos!.add(new ProjectVideos.fromJson(v));
-      });
-    }
+    projectImages = json['project_images'].cast<String>();
+    projectVideos = json['project_videos'].cast<String>();
     projectId = json['project_id'];
     title = json['title'];
     details = json['details'];
     target = json['target'];
     raised = json['raised'];
+    draft = json['draft'];
     isArchived = json['is_archived'];
     active = json['active'];
     createdAt = json['created_at'];
@@ -75,105 +68,18 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    if (this.projectImages != null) {
-      data['project_images'] =
-          this.projectImages!.map((v) => v.toJson()).toList();
-    }
-    if (this.projectVideos != null) {
-      data['project_videos'] =
-          this.projectVideos!.map((v) => v.toJson()).toList();
-    }
+    data['project_images'] = this.projectImages;
+    data['project_videos'] = this.projectVideos;
     data['project_id'] = this.projectId;
     data['title'] = this.title;
     data['details'] = this.details;
     data['target'] = this.target;
     data['raised'] = this.raised;
+    data['draft'] = this.draft;
     data['is_archived'] = this.isArchived;
     data['active'] = this.active;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    return data;
-  }
-}
-
-class ProjectImages {
-  int? id;
-  String? image;
-  bool? isArchived;
-  bool? active;
-  String? createdAt;
-  String? updatedAt;
-  int? project;
-
-  ProjectImages(
-      {this.id,
-      this.image,
-      this.isArchived,
-      this.active,
-      this.createdAt,
-      this.updatedAt,
-      this.project});
-
-  ProjectImages.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    image = json['image'];
-    isArchived = json['is_archived'];
-    active = json['active'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    project = json['project'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['image'] = this.image;
-    data['is_archived'] = this.isArchived;
-    data['active'] = this.active;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['project'] = this.project;
-    return data;
-  }
-}
-
-class ProjectVideos {
-  int? id;
-  String? video;
-  bool? isArchived;
-  bool? active;
-  String? createdAt;
-  String? updatedAt;
-  int? project;
-
-  ProjectVideos(
-      {this.id,
-      this.video,
-      this.isArchived,
-      this.active,
-      this.createdAt,
-      this.updatedAt,
-      this.project});
-
-  ProjectVideos.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    video = json['video'];
-    isArchived = json['is_archived'];
-    active = json['active'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    project = json['project'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['video'] = this.video;
-    data['is_archived'] = this.isArchived;
-    data['active'] = this.active;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['project'] = this.project;
     return data;
   }
 }

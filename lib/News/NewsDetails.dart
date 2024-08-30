@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wghsoga_app/Projects/models/projects_detail_model.dart';
+import 'package:intl/intl.dart';
 import 'package:wghsoga_app/constants.dart';
 
 import 'package:http/http.dart' as http;
@@ -19,8 +19,7 @@ Future<NewsDetailModel> get_news_detail(news_id) async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-            'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
 
       //'Authorization': 'Token ' + token.toString()
     },
@@ -76,20 +75,21 @@ class _NewsDetailsState extends State<NewsDetails> {
         future: _futureNewsDetails,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingDialogBox(
+            return const LoadingDialogBox(
               text: 'Please Wait..',
             );
           } else if (snapshot.hasData) {
             var data = snapshot.data!;
 
             var news_detail = data.data!;
+            DateTime date = DateTime.parse(news_detail.publishedAt!);
 
             if (data.message == "Successful") {
               return Scaffold(
                   body: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage('assets/images/wes_back2.png'),
                         fit: BoxFit.cover)),
@@ -107,7 +107,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                 Navigator.pop(context);
                               },
                               child: Container(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   color: wesGreen,
                                   borderRadius: BorderRadius.circular(10),
@@ -115,11 +115,12 @@ class _NewsDetailsState extends State<NewsDetails> {
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.4),
                                       blurRadius: 2,
-                                      offset: Offset(2, 4), // Shadow position
+                                      offset:
+                                          const Offset(2, 4), // Shadow position
                                     ),
                                   ],
                                 ),
-                                child: Center(
+                                child: const Center(
                                   child: Icon(
                                     Icons.arrow_back,
                                     color: wesYellow,
@@ -127,8 +128,8 @@ class _NewsDetailsState extends State<NewsDetails> {
                                 ),
                               ),
                             ),
-                            Text(
-                              'News',
+                            const Text(
+                              'News Detail',
                               style: TextStyle(
                                   height: 1,
                                   color: wesWhite,
@@ -136,23 +137,23 @@ class _NewsDetailsState extends State<NewsDetails> {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w300),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.search,
-                              color: wesYellow,
+                              color: wesGreen,
                               size: 20,
                             )
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Expanded(
                           child: ListView(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 3),
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.only(bottom: 3),
                             decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10)),
@@ -172,8 +173,8 @@ class _NewsDetailsState extends State<NewsDetails> {
                                             color:
                                                 Colors.black.withOpacity(0.2),
                                             blurRadius: 2,
-                                            offset:
-                                                Offset(2, 4), // Shadow position
+                                            offset: const Offset(
+                                                2, 4), // Shadow position
                                           ),
                                         ],
                                       ),
@@ -188,8 +189,8 @@ class _NewsDetailsState extends State<NewsDetails> {
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           image: DecorationImage(
-                                            image: AssetImage(
-                                                'assets/images/nyahan.png'),
+                                            image: NetworkImage(
+                                                '$hostName/media/${news_detail.newsImages![0]}'),
                                             fit: BoxFit.cover,
                                           ),
                                           borderRadius:
@@ -199,7 +200,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                               color:
                                                   Colors.black.withOpacity(0.2),
                                               blurRadius: 2,
-                                              offset: Offset(
+                                              offset: const Offset(
                                                   2, 4), // Shadow position
                                             ),
                                           ],
@@ -208,7 +209,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Padding(
@@ -220,15 +221,17 @@ class _NewsDetailsState extends State<NewsDetails> {
                                       Row(
                                         children: [
                                           CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                'assets/images/nyahan.png'),
+                                            backgroundImage: NetworkImage(
+                                                hostName +
+                                                    news_detail.author!.photo
+                                                        .toString()),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Text(
-                                            'Nyahan Davis',
-                                            style: TextStyle(
+                                            "${news_detail.author!.firstName ?? ""} ${news_detail.author!.middleName ?? ""} ${news_detail.author!.lastName ?? ""}",
+                                            style: const TextStyle(
                                                 height: 1,
                                                 color: wesWhite,
                                                 fontSize: 14,
@@ -237,20 +240,25 @@ class _NewsDetailsState extends State<NewsDetails> {
                                           ),
                                         ],
                                       ),
-                                      Text(
-                                        'Nov 11, 2022  1 min read',
-                                        style: TextStyle(
-                                            height: 1,
-                                            color: wesWhite.withOpacity(0.5),
-                                            fontSize: 10,
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.w300),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          '${DateFormat('MMMM').format(DateTime.parse(date.toString()))} ${date.day.toString()}, ${date.year.toString()} ${news_detail.readDuration ?? ""}',
+                                          style: TextStyle(
+                                              height: 1,
+                                              color: wesWhite.withOpacity(0.5),
+                                              fontSize: 10,
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w300),
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  height: 20,
+                                  height: 25,
                                   decoration: BoxDecoration(
                                       color: wesWhite.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(5)),
@@ -260,17 +268,17 @@ class _NewsDetailsState extends State<NewsDetails> {
                                     children: [
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.thumb_up_alt_outlined,
                                             color: wesYellow,
                                             size: 15,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 5,
                                           ),
                                           Text(
-                                            '9 Likes',
-                                            style: TextStyle(
+                                            '${news_detail.likeCount} Likes',
+                                            style: const TextStyle(
                                               height: 1,
                                               color: wesWhite,
                                               fontSize: 12,
@@ -281,17 +289,17 @@ class _NewsDetailsState extends State<NewsDetails> {
                                       ),
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.comment,
                                             color: wesYellow,
                                             size: 15,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 5,
                                           ),
                                           Text(
-                                            '20 Comments',
-                                            style: TextStyle(
+                                            '${news_detail.commentCount} Comments',
+                                            style: const TextStyle(
                                               height: 1,
                                               color: wesWhite,
                                               fontSize: 12,
@@ -302,17 +310,17 @@ class _NewsDetailsState extends State<NewsDetails> {
                                       ),
                                       Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.share,
                                             color: wesYellow,
                                             size: 15,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 5,
                                           ),
                                           Text(
-                                            '20 Comments',
-                                            style: TextStyle(
+                                            '${news_detail.shareCount} Shares',
+                                            style: const TextStyle(
                                               height: 1,
                                               color: wesWhite,
                                               fontSize: 12,
@@ -324,7 +332,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                               ],
@@ -338,71 +346,110 @@ class _NewsDetailsState extends State<NewsDetails> {
                                 Column(
                                   children: [
                                     Text(
-                                      '2022 OGA Fundraising Dinner Dance towards safer transport on the Volta Lake',
-                                      style: TextStyle(
+                                      news_detail.title ?? '',
+                                      style: const TextStyle(
                                           height: 1,
                                           color: wesYellow,
                                           fontSize: 20,
                                           fontFamily: 'Montserrat',
                                           fontWeight: FontWeight.w600),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                     Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
-                                      style: TextStyle(
+                                      news_detail.content ?? '',
+                                      style: const TextStyle(
                                         height: 1,
                                         color: wesWhite,
                                         fontSize: 14,
                                         fontFamily: 'Montserrat',
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
-                                      style: TextStyle(
-                                        height: 1,
-                                        color: wesWhite,
-                                        fontSize: 14,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
-                                      style: TextStyle(
-                                        height: 1,
-                                        color: wesWhite,
-                                        fontSize: 14,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
-                                      style: TextStyle(
-                                        height: 1,
-                                        color: wesWhite,
-                                        fontSize: 14,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 10,
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
-                                Row(
+
+                                ///PHOTOS
+
+                                Container(
+                                  height: 100,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: news_detail.newsImages!.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          margin: EdgeInsets.all(3),
+                                          height: 100,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              color: wesWhite,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              image: DecorationImage(
+                                                  image: NetworkImage(hostName +
+                                                      '/media/' +
+                                                      news_detail
+                                                          .newsImages![index]),
+                                                  fit: BoxFit.cover)),
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+
+                                ///Videos
+
+                                Container(
+                                  height: 100,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: news_detail.newsVideos!.length,
+                                      itemBuilder: (context, index) {
+                                        return Stack(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.all(3),
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  color: wesWhite,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          hostName +
+                                                              '/media/' +
+                                                              news_detail
+                                                                      .newsVideos![
+                                                                  index]),
+                                                      fit: BoxFit.cover)),
+                                            ),
+                                            Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                top: 0,
+                                                bottom: 0,
+                                                child: Icon(
+                                                  Icons.play_arrow,
+                                                  color: wesYellow,
+                                                  size: 50,
+                                                ))
+                                          ],
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+
+                                const Row(
                                   children: [
                                     Text(
                                       'Comments',
@@ -425,7 +472,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
+                                              const Row(
                                                 children: [
                                                   CircleAvatar(
                                                     backgroundImage: AssetImage(
@@ -462,7 +509,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                             ],
                                           ),
                                         ),
-                                        Text(
+                                        const Text(
                                           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
                                           style: TextStyle(
                                               height: 1,
@@ -472,7 +519,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     Column(
@@ -483,7 +530,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
+                                              const Row(
                                                 children: [
                                                   CircleAvatar(
                                                     backgroundImage: AssetImage(
@@ -520,7 +567,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                             ],
                                           ),
                                         ),
-                                        Text(
+                                        const Text(
                                           'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam',
                                           style: TextStyle(
                                               height: 1,
@@ -533,12 +580,12 @@ class _NewsDetailsState extends State<NewsDetails> {
                                   ],
                                 ),
                                 Container(
-                                  margin: EdgeInsets.all(20),
+                                  margin: const EdgeInsets.all(20),
                                   child: Row(
                                     children: [
                                       Expanded(
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 10),
                                           decoration: BoxDecoration(
                                               //color: Colors.white,
@@ -548,9 +595,9 @@ class _NewsDetailsState extends State<NewsDetails> {
                                                   color: Colors.white
                                                       .withOpacity(0.1))),
                                           child: TextFormField(
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                            decoration: InputDecoration(
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                            decoration: const InputDecoration(
                                               //hintText: 'Enter Username/Email',
 
                                               hintStyle: TextStyle(
@@ -597,7 +644,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -607,14 +654,14 @@ class _NewsDetailsState extends State<NewsDetails> {
                                     ),
                                     Expanded(
                                       child: Container(
-                                        padding: EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(10),
                                         width:
                                             MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
                                             color: wesGreen,
                                             borderRadius:
                                                 BorderRadius.circular(10)),
-                                        child: Center(
+                                        child: const Center(
                                           child: Text(
                                             'Add Comment',
                                             style: TextStyle(
@@ -625,7 +672,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 ),
                               ],
@@ -634,7 +681,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                         ],
                       )),
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
                         decoration: BoxDecoration(
                           color: wesGreen,
                           boxShadow: [
@@ -642,8 +689,8 @@ class _NewsDetailsState extends State<NewsDetails> {
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                              offset: const Offset(
+                                  0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -656,7 +703,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                                 /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
                       */
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.home,
@@ -681,7 +728,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                               onTap: () {
                                 //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.shopping_cart,
@@ -706,7 +753,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                               onTap: () {
                                 // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.money,
@@ -731,7 +778,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                               onTap: () {
                                 //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.settings,
@@ -756,7 +803,7 @@ class _NewsDetailsState extends State<NewsDetails> {
                               onTap: () {
                                 //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.account_circle,
@@ -787,7 +834,7 @@ class _NewsDetailsState extends State<NewsDetails> {
             }
           }
 
-          return LoadingDialogBox(
+          return const LoadingDialogBox(
             text: 'Please Wait..',
           );
         });

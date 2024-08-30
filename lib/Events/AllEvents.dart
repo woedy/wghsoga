@@ -246,8 +246,7 @@ class _AllEventsState extends State<AllEvents> {
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
                                                     image: DecorationImage(
-                                                      image: AssetImage(
-                                                          'assets/images/nyahan.png'),
+                                                      image: NetworkImage(hostName + '/media/' + allEvents[index].eventImages![0]),
                                                       fit: BoxFit.cover,
                                                     ),
                                                     borderRadius:

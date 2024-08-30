@@ -7,8 +7,6 @@ import 'package:wghsoga_app/constants.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../Components/loading_dialog.dart';
-
 Future<AllNewsModel> get_all_news(
     {int page = 1, Map<String, String>? filters, String? search_query}) async {
   var token = await getApiPref();
@@ -109,8 +107,8 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
         body: Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-          image: DecorationImage(
+      decoration: const BoxDecoration(
+          image: const DecorationImage(
               image: AssetImage('assets/images/wes_back2.png'),
               fit: BoxFit.cover)),
       child: SafeArea(
@@ -126,7 +124,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      padding: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: wesGreen,
                         borderRadius: BorderRadius.circular(10),
@@ -134,11 +132,11 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.4),
                             blurRadius: 2,
-                            offset: Offset(2, 4), // Shadow position
+                            offset: const Offset(2, 4), // Shadow position
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.arrow_back,
                           color: wesYellow,
@@ -146,7 +144,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                       ),
                     ),
                   ),
-                  Text(
+                  const Text(
                     'News',
                     style: TextStyle(
                         height: 1,
@@ -155,7 +153,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w300),
                   ),
-                  Icon(
+                  const Icon(
                     Icons.search,
                     color: wesYellow,
                     size: 20,
@@ -168,11 +166,11 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                     future: _futureAllNews,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else if (!snapshot.hasData || _allNews.isEmpty) {
-                        return Center(child: Text('No news available'));
+                        return const Center(child: Text('No news available'));
                       } else {
                         final allNews = snapshot.data!.data!.newss!;
                         return NotificationListener<ScrollNotification>(
@@ -191,7 +189,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                             itemCount: allNews.length + (_isLoading ? 1 : 0),
                             itemBuilder: (context, index) {
                               if (index == allNews.length) {
-                                return Center(
+                                return const Center(
                                     child: CircularProgressIndicator());
                               }
                               return InkWell(
@@ -205,8 +203,8 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                                   .toString())));
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.only(bottom: 3),
+                                  padding: const EdgeInsets.all(10),
+                                  margin: const EdgeInsets.only(bottom: 3),
                                   decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(10)),
@@ -228,7 +226,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                                   color: Colors.black
                                                       .withOpacity(0.2),
                                                   blurRadius: 2,
-                                                  offset: Offset(
+                                                  offset: const Offset(
                                                       2, 4), // Shadow position
                                                 ),
                                               ],
@@ -244,8 +242,10 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 image: DecorationImage(
-                                                  image: AssetImage(
-                                                      'assets/images/nyahan.png'),
+                                                  image: NetworkImage(hostName +
+                                                      allNews[index]
+                                                          .newsImage
+                                                          .toString()),
                                                   fit: BoxFit.cover,
                                                 ),
                                                 borderRadius:
@@ -255,7 +255,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                                     color: Colors.black
                                                         .withOpacity(0.2),
                                                     blurRadius: 2,
-                                                    offset: Offset(2,
+                                                    offset: const Offset(2,
                                                         4), // Shadow position
                                                   ),
                                                 ],
@@ -264,7 +264,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Column(
@@ -272,36 +272,41 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            '2022 OGA Fundraising Dinner Dance towards...',
-                                            style: TextStyle(
+                                            allNews[index].title ?? '',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
                                                 height: 1,
                                                 color: wesYellow,
                                                 fontSize: 16,
                                                 fontFamily: 'Montserrat',
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                           Text(
-                                            'Support WGHS NSMQ team',
-                                            style: TextStyle(
+                                            allNews[index].content ?? '',
+                                            maxLines: 3,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
                                               height: 1,
                                               color: wesWhite,
                                               fontSize: 15,
                                               fontFamily: 'Montserrat',
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Container(
-                                        height: 20,
+                                        //height: 20,
+                                        padding: EdgeInsets.all(5),
                                         decoration: BoxDecoration(
                                             color: wesWhite.withOpacity(0.1)),
                                         child: Row(
@@ -310,17 +315,20 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                           children: [
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.thumb_up_alt_outlined,
                                                   color: wesYellow,
                                                   size: 15,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  '9 Likes',
-                                                  style: TextStyle(
+                                                  allNews[index]
+                                                          .likeCount
+                                                          .toString() +
+                                                      ' Likes',
+                                                  style: const TextStyle(
                                                     height: 1,
                                                     color: wesWhite,
                                                     fontSize: 12,
@@ -331,17 +339,20 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                             ),
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.comment,
                                                   color: wesYellow,
                                                   size: 15,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  '20 Comments',
-                                                  style: TextStyle(
+                                                  allNews[index]
+                                                          .commentCount
+                                                          .toString() +
+                                                      ' Comments',
+                                                  style: const TextStyle(
                                                     height: 1,
                                                     color: wesWhite,
                                                     fontSize: 12,
@@ -352,17 +363,20 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                             ),
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Icons.share,
                                                   color: wesYellow,
                                                   size: 15,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  '20 Comments',
-                                                  style: TextStyle(
+                                                  allNews[index]
+                                                          .shareCount
+                                                          .toString() +
+                                                      ' Shares',
+                                                  style: const TextStyle(
                                                     height: 1,
                                                     color: wesWhite,
                                                     fontSize: 12,
@@ -374,7 +388,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                                           ],
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                     ],
@@ -387,7 +401,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                       }
                     })),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 15),
+              padding: const EdgeInsets.symmetric(vertical: 15),
               decoration: BoxDecoration(
                 color: wesGreen,
                 boxShadow: [
@@ -395,7 +409,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
               ),
@@ -408,7 +422,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                       /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
                       */
                     },
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                           Icons.home,
@@ -433,7 +447,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                     onTap: () {
                       //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
                     },
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                           Icons.shopping_cart,
@@ -458,7 +472,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                     onTap: () {
                       // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
                     },
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                           Icons.money,
@@ -483,7 +497,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                     onTap: () {
                       //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
                     },
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                           Icons.settings,
@@ -508,7 +522,7 @@ class _AllNewsScreenState extends State<AllNewsScreen> {
                     onTap: () {
                       //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
                     },
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                           Icons.account_circle,

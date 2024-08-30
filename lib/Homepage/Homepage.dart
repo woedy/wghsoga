@@ -350,14 +350,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       builder: (BuildContext context) =>
                           const AllUsersScreen()));
                 },
-                child: const Text(
-                  'View All',
-                  style: TextStyle(
-                      height: 1,
-                      color: wesWhite,
-                      fontSize: 12,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500),
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(
+                        height: 1,
+                        color: wesWhite,
+                        fontSize: 12,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
               ),
             ],
@@ -496,14 +499,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => const AllEvents()));
                 },
-                child: const Text(
-                  'View All',
-                  style: TextStyle(
-                      height: 1,
-                      color: wesWhite,
-                      fontSize: 12,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500),
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(
+                        height: 1,
+                        color: wesWhite,
+                        fontSize: 12,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
               ),
             ],
@@ -682,14 +688,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       builder: (BuildContext context) =>
                           const AllNewsScreen()));
                 },
-                child: const Text(
-                  'View All',
-                  style: TextStyle(
-                      height: 1,
-                      color: wesWhite,
-                      fontSize: 12,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500),
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(
+                        height: 1,
+                        color: wesWhite,
+                        fontSize: 12,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
               ),
             ],
@@ -854,14 +863,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       builder: (BuildContext context) =>
                           const AllProjectsScreen()));
                 },
-                child: const Text(
-                  'View All',
-                  style: TextStyle(
-                      height: 1,
-                      color: wesWhite,
-                      fontSize: 12,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500),
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: const Text(
+                    'View All',
+                    style: TextStyle(
+                        height: 1,
+                        color: wesWhite,
+                        fontSize: 12,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500),
+                  ),
                 ),
               ),
             ],

@@ -16,8 +16,7 @@ Future<ProjectDetailModel> get_project_detail(project_id) async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
 
       //'Authorization': 'Token '  + token.toString()
     },
@@ -129,7 +128,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                               ),
                             ),
                             const Text(
-                              'Projects',
+                              'Project Details',
                               style: TextStyle(
                                   height: 1,
                                   color: wesWhite,
@@ -139,7 +138,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                             ),
                             const Icon(
                               Icons.search,
-                              color: wesYellow,
+                              color: wesGreen,
                               size: 20,
                             )
                           ],
@@ -188,9 +187,11 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                         //width: 95,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          image: const DecorationImage(
-                                            image: NetworkImage(
-                                                'assets/images/nyahan.png'),
+                                          image: DecorationImage(
+                                            image: NetworkImage(hostName +
+                                                '/media/' +
+                                                project_detail
+                                                    .projectImages![0]),
                                             fit: BoxFit.cover,
                                           ),
                                           borderRadius:
@@ -227,9 +228,9 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    const Text(
-                                      'Ghc 678,000',
-                                      style: TextStyle(
+                                    Text(
+                                      project_detail.target ?? '',
+                                      style: const TextStyle(
                                           height: 1,
                                           color: wesYellow,
                                           fontSize: 30,
@@ -262,6 +263,36 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                     const SizedBox(
                                       height: 10,
                                     ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          project_detail.raised ?? 'No Amount',
+                                          style: const TextStyle(
+                                              height: 1,
+                                              color: wesYellow,
+                                              fontSize: 15,
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        const Text(
+                                          'Raised',
+                                          style: TextStyle(
+                                              height: 1,
+                                              color: wesWhite,
+                                              fontSize: 10,
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
                                   ],
                                 ),
                               ],
@@ -272,10 +303,10 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Column(
+                                Column(
                                   children: [
                                     Text(
-                                      '2022 OGA Fundraising Dinner Dance towards safer transport on the Volta Lake',
+                                      project_detail.title ?? '',
                                       style: TextStyle(
                                           height: 1,
                                           color: wesYellow,
@@ -287,43 +318,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                       height: 10,
                                     ),
                                     Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
-                                      style: TextStyle(
-                                        height: 1,
-                                        color: wesWhite,
-                                        fontSize: 14,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
-                                      style: TextStyle(
-                                        height: 1,
-                                        color: wesWhite,
-                                        fontSize: 14,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
-                                      style: TextStyle(
-                                        height: 1,
-                                        color: wesWhite,
-                                        fontSize: 14,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'When it’s in the news, we only wish the victims well but when it’s close to home we wish We had done something at the first instance no matter how small.',
+                                      project_detail.details ?? '',
                                       style: TextStyle(
                                         height: 1,
                                         color: wesWhite,
@@ -335,6 +330,82 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                                       height: 10,
                                     ),
                                   ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+
+                                ///PHOTOS
+
+                                Container(
+                                  height: 100,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount:
+                                          project_detail.projectImages!.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          margin: EdgeInsets.all(3),
+                                          height: 100,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              color: wesWhite,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              image: DecorationImage(
+                                                  image: NetworkImage(hostName +
+                                                      '/media/' +
+                                                      project_detail
+                                                              .projectImages![
+                                                          index]),
+                                                  fit: BoxFit.cover)),
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+
+                                ///Videos
+
+                                Container(
+                                  height: 100,
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount:
+                                          project_detail.projectVideos!.length,
+                                      itemBuilder: (context, index) {
+                                        return Stack(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.all(3),
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  color: wesWhite,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(hostName +
+                                                          '/media/' +
+                                                          project_detail
+                                                                  .projectVideos![
+                                                              index]),
+                                                      fit: BoxFit.cover)),
+                                            ),
+                                            Positioned(
+                                                left: 0,
+                                                right: 0,
+                                                top: 0,
+                                                bottom: 0,
+                                                child: Icon(
+                                                  Icons.play_arrow,
+                                                  color: wesYellow,
+                                                  size: 50,
+                                                ))
+                                          ],
+                                        );
+                                      }),
                                 ),
                                 const SizedBox(
                                   height: 20,
