@@ -30,8 +30,7 @@ Future<AllProductsModel> get_all_products(
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token $token', 
+      'Authorization': 'Token $token',
     },
   );
 
@@ -110,7 +109,7 @@ class _ShopScreenState extends State<ShopScreen> {
         body: Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/wes_back2.png'),
               fit: BoxFit.cover)),
@@ -127,7 +126,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      padding: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: wesGreen,
                         borderRadius: BorderRadius.circular(10),
@@ -135,11 +134,11 @@ class _ShopScreenState extends State<ShopScreen> {
                           BoxShadow(
                             color: Colors.black.withOpacity(0.4),
                             blurRadius: 2,
-                            offset: Offset(2, 4), // Shadow position
+                            offset: const Offset(2, 4), // Shadow position
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.arrow_back,
                           color: wesYellow,
@@ -147,7 +146,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Shop',
                     style: TextStyle(
                         height: 1,
@@ -156,7 +155,7 @@ class _ShopScreenState extends State<ShopScreen> {
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w300),
                   ),
-                  Icon(
+                  const Icon(
                     Icons.search,
                     color: wesYellow,
                     size: 20,
@@ -169,26 +168,28 @@ class _ShopScreenState extends State<ShopScreen> {
                     future: _futureAllProducts,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else if (!snapshot.hasData || _allProducts.isEmpty) {
-                        return Center(child: Text('No Product available'));
+                        return const Center(
+                            child: Text('No Product available'));
                       } else {
                         final allProducts = snapshot.data!.data!.products!;
                         return GridView.builder(
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2, // Number of columns
                             crossAxisSpacing: 10, // Spacing between columns
                             mainAxisSpacing: 10, // Spacing between rows
                           ),
-                          padding:
-                              EdgeInsets.all(10), // Padding around the grid
+                          padding: const EdgeInsets.all(
+                              10), // Padding around the grid
                           itemCount: allProducts.length + (_isLoading ? 1 : 0),
                           itemBuilder: (context, index) {
                             if (index == allProducts.length) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             }
                             return InkWell(
                               onTap: () {
@@ -221,7 +222,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                 color: Colors.black
                                                     .withOpacity(0.2),
                                                 blurRadius: 2,
-                                                offset: Offset(
+                                                offset: const Offset(
                                                     2, 4), // Shadow position
                                               ),
                                             ],
@@ -237,8 +238,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               image: DecorationImage(
-                                                image: AssetImage(
-                                                    'assets/images/nyahan.png'),
+                                                image: NetworkImage(hostName +
+                                                    allProducts[index]
+                                                        .productImage
+                                                        .toString()),
                                                 fit: BoxFit.cover,
                                               ),
                                               borderRadius:
@@ -248,7 +251,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                                   color: Colors.black
                                                       .withOpacity(0.2),
                                                   blurRadius: 2,
-                                                  offset: Offset(
+                                                  offset: const Offset(
                                                       2, 4), // Shadow position
                                                 ),
                                               ],
@@ -257,17 +260,17 @@ class _ShopScreenState extends State<ShopScreen> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 5,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: EdgeInsets.all(8.0),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Organ Dedication Broch..',
+                                            allProducts[index].name ?? '',
                                             style: TextStyle(
                                               height: 1,
                                               color: wesWhite,
@@ -279,7 +282,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                             height: 7,
                                           ),
                                           Text(
-                                            'GH₵ 150.00',
+                                            'GH₵ ' +
+                                                allProducts[index]
+                                                    .price
+                                                    .toString(),
                                             style: TextStyle(
                                                 height: 1,
                                                 color: wesYellow,
@@ -326,7 +332,7 @@ class _ShopScreenState extends State<ShopScreen> {
           InkWell(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomepageScreen()));
+                  builder: (BuildContext context) => const HomepageScreen()));
             },
             child: const Column(
               children: [
@@ -487,15 +493,15 @@ class _ShopScreenState extends State<ShopScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'Filters',
                     style: TextStyle(color: wesGreen, fontSize: 18),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: DropdownButton<String>(
-                      hint: Text("Select Year Group"),
+                      hint: const Text("Select Year Group"),
                       value: _filters?['year_group'],
                       onChanged: (String? newValue) {
                         setState(() {
@@ -512,7 +518,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       }).toList(),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                 ],
               ),
             );

@@ -16,8 +16,7 @@ Future<ProductDetailModel> get_product_detail(user_id) async {
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token 080a263af80fbfed5c4def6ec747b2972440315c', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
 
       //'Authorization': 'Token '  + token.toString()
     },
@@ -152,27 +151,52 @@ class _ShopDetailsState extends State<ShopDetails> {
                           Container(
                             padding: EdgeInsets.all(10),
                             margin: EdgeInsets.only(bottom: 3),
+                            height: 260,
                             decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(
-                                      Icons.arrow_back_ios_new_sharp,
-                                      color: wesYellow,
-                                    ),
-                                    Stack(
-                                      children: [
-                                        Container(
-                                          height: 230,
-                                          width: 250,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: product_detail.productImages!.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: EdgeInsets.all(5),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        height: 230,
+                                        width: 250,
+                                        decoration: BoxDecoration(
+                                          color: wesYellow,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              blurRadius: 2,
+                                              offset: Offset(
+                                                  2, 4), // Shadow position
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 0,
+                                        left: 1,
+                                        right: 1,
+                                        child: Container(
+                                          height: 225,
+                                          width: 240,
                                           decoration: BoxDecoration(
-                                            color: wesYellow,
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                              image: NetworkImage(hostName +
+                                                  '/media/' +
+                                                  product_detail
+                                                      .productImages![index]),
+                                              fit: BoxFit.cover,
+                                            ),
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                             boxShadow: [
@@ -186,76 +210,15 @@ class _ShopDetailsState extends State<ShopDetails> {
                                             ],
                                           ),
                                         ),
-                                        Positioned(
-                                          top: 0,
-                                          left: 1,
-                                          right: 1,
-                                          child: Container(
-                                            height: 225,
-                                            width: 240,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                    'assets/images/nyahan.png'),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.2),
-                                                  blurRadius: 2,
-                                                  offset: Offset(
-                                                      2, 4), // Shadow position
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward_ios_sharp,
-                                      color: wesYellow,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 3,
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    CircleAvatar(
-                                      radius: 3,
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    CircleAvatar(
-                                      radius: 3,
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    CircleAvatar(
-                                      radius: 3,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(15.0),
+                            padding: EdgeInsets.all(15.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -263,14 +226,16 @@ class _ShopDetailsState extends State<ShopDetails> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      'They call me Archie',
-                                      style: TextStyle(
-                                          height: 1,
-                                          color: wesWhite,
-                                          fontSize: 20,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w700),
+                                    Expanded(
+                                      child: Text(
+                                        product_detail.name ?? '',
+                                        style: TextStyle(
+                                            height: 1,
+                                            color: wesWhite,
+                                            fontSize: 20,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w700),
+                                      ),
                                     ),
                                     Row(
                                       children: [
@@ -316,11 +281,35 @@ class _ShopDetailsState extends State<ShopDetails> {
                                   height: 10,
                                 ),
                                 Text(
-                                  'Ipsum morbi euismod posuere nostra nullam egestas mollis nibh conubia habitasse curabitur.',
+                                  product_detail.description ?? '',
                                   style: TextStyle(
                                       height: 1,
                                       color: wesWhite,
                                       fontSize: 16,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w300),
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                      height: 1,
+                                      color: wesYellow,
+                                      fontSize: 18,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "GH₵ " + product_detail.price.toString() ?? '',
+                                  style: TextStyle(
+                                      height: 1,
+                                      color: wesWhite,
+                                      fontSize: 30,
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w300),
                                 ),
