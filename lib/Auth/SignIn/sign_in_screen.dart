@@ -36,7 +36,7 @@ Future<SignInModel> signInUser(String email, String password) async {
 
       await saveIDApiKey(result['data']['token'].toString());
       await saveUserID(result['data']['user_id'].toString());
-
+      await saveUserPhoto(result['data']['photo'].toString());
       await saveUserData(result['data']);
     }
     return SignInModel.fromJson(jsonDecode(response.body));

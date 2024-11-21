@@ -51,12 +51,12 @@ class Data {
 
 class Projects {
   int? id;
-  List<String>? projectImages;
+  String? projectImage;
   String? projectId;
   String? title;
   String? details;
   String? target;
-  Null? raised;
+  String? raised;
   bool? draft;
   bool? isArchived;
   bool? active;
@@ -65,7 +65,7 @@ class Projects {
 
   Projects(
       {this.id,
-      this.projectImages,
+      this.projectImage,
       this.projectId,
       this.title,
       this.details,
@@ -79,7 +79,7 @@ class Projects {
 
   Projects.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    projectImages = json['project_images'].cast<String>();
+    projectImage = json['project_image'];
     projectId = json['project_id'];
     title = json['title'];
     details = json['details'];
@@ -95,7 +95,7 @@ class Projects {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['project_images'] = this.projectImages;
+    data['project_image'] = this.projectImage;
     data['project_id'] = this.projectId;
     data['title'] = this.title;
     data['details'] = this.details;
@@ -113,8 +113,8 @@ class Projects {
 class Pagination {
   int? pageNumber;
   int? totalPages;
-  Null? next;
-  Null? previous;
+  int? next;
+  int? previous;
 
   Pagination({this.pageNumber, this.totalPages, this.next, this.previous});
 

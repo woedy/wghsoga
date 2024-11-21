@@ -87,7 +87,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                   body: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage('assets/images/wes_back2.png'),
                         fit: BoxFit.cover)),
@@ -105,7 +105,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                 Navigator.pop(context);
                               },
                               child: Container(
-                                padding: EdgeInsets.all(15),
+                                padding: const EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   color: wesGreen,
                                   borderRadius: BorderRadius.circular(10),
@@ -113,11 +113,11 @@ class _ShopDetailsState extends State<ShopDetails> {
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.4),
                                       blurRadius: 2,
-                                      offset: Offset(2, 4), // Shadow position
+                                      offset: const Offset(2, 4), // Shadow position
                                     ),
                                   ],
                                 ),
-                                child: Center(
+                                child: const Center(
                                   child: Icon(
                                     Icons.arrow_back,
                                     color: wesYellow,
@@ -125,7 +125,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                 ),
                               ),
                             ),
-                            Text(
+                            const Text(
                               'Item Detail',
                               style: TextStyle(
                                   height: 1,
@@ -134,7 +134,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w300),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.search,
                               color: wesYellow,
                               size: 20,
@@ -142,15 +142,15 @@ class _ShopDetailsState extends State<ShopDetails> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Expanded(
                           child: ListView(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 3),
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.only(bottom: 3),
                             height: 260,
                             decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.2),
@@ -160,7 +160,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               itemCount: product_detail.productImages!.length,
                               itemBuilder: (context, index) {
                                 return Container(
-                                  margin: EdgeInsets.all(5),
+                                  margin: const EdgeInsets.all(5),
                                   child: Stack(
                                     children: [
                                       Container(
@@ -175,7 +175,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                               color:
                                                   Colors.black.withOpacity(0.2),
                                               blurRadius: 2,
-                                              offset: Offset(
+                                              offset: const Offset(
                                                   2, 4), // Shadow position
                                             ),
                                           ],
@@ -191,10 +191,8 @@ class _ShopDetailsState extends State<ShopDetails> {
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             image: DecorationImage(
-                                              image: NetworkImage(hostName +
-                                                  '/media/' +
-                                                  product_detail
-                                                      .productImages![index]),
+                                              image: NetworkImage('$hostName/media/${product_detail
+                                                      .productImages![index]}'),
                                               fit: BoxFit.cover,
                                             ),
                                             borderRadius:
@@ -204,7 +202,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                                 color: Colors.black
                                                     .withOpacity(0.2),
                                                 blurRadius: 2,
-                                                offset: Offset(
+                                                offset: const Offset(
                                                     2, 4), // Shadow position
                                               ),
                                             ],
@@ -218,7 +216,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(15.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -229,7 +227,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                     Expanded(
                                       child: Text(
                                         product_detail.name ?? '',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             height: 1,
                                             color: wesWhite,
                                             fontSize: 20,
@@ -237,7 +235,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                             fontWeight: FontWeight.w700),
                                       ),
                                     ),
-                                    Row(
+                                    const Row(
                                       children: [
                                         Icon(
                                           Icons.arrow_back_ios_new_sharp,
@@ -265,10 +263,10 @@ class _ShopDetailsState extends State<ShopDetails> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 30,
                                 ),
-                                Text(
+                                const Text(
                                   'Description',
                                   style: TextStyle(
                                       height: 1,
@@ -277,22 +275,22 @@ class _ShopDetailsState extends State<ShopDetails> {
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w600),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
                                   product_detail.description ?? '',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       height: 1,
                                       color: wesWhite,
                                       fontSize: 16,
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w300),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 30,
                                 ),
-                                Text(
+                                const Text(
                                   'Price',
                                   style: TextStyle(
                                       height: 1,
@@ -301,32 +299,32 @@ class _ShopDetailsState extends State<ShopDetails> {
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w600),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Text(
-                                  "GH₵ " + product_detail.price.toString() ?? '',
-                                  style: TextStyle(
+                                  "GH₵ ${product_detail.price}",
+                                  style: const TextStyle(
                                       height: 1,
                                       color: wesWhite,
                                       fontSize: 30,
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.w300),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 100,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.all(16),
+                                      padding: const EdgeInsets.all(16),
                                       width: 150,
                                       decoration: BoxDecoration(
                                           color: wesYellow,
                                           borderRadius:
                                               BorderRadius.circular(10)),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           'Buy',
                                           style: TextStyle(
@@ -342,7 +340,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                         ],
                       )),
                       Container(
-                        padding: EdgeInsets.symmetric(vertical: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
                         decoration: BoxDecoration(
                           color: wesGreen,
                           boxShadow: [
@@ -351,7 +349,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               spreadRadius: 5,
                               blurRadius: 7,
                               offset:
-                                  Offset(0, 3), // changes position of shadow
+                                  const Offset(0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -364,7 +362,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                                 /*      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DashboardScreen()));
                       */
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.home,
@@ -389,7 +387,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               onTap: () {
                                 //  Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserBookings()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.shopping_cart,
@@ -414,7 +412,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               onTap: () {
                                 // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => AllShopsScreen()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.money,
@@ -439,7 +437,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               onTap: () {
                                 //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ChatScreen()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.settings,
@@ -464,7 +462,7 @@ class _ShopDetailsState extends State<ShopDetails> {
                               onTap: () {
                                 //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UserProfile()));
                               },
-                              child: Column(
+                              child: const Column(
                                 children: [
                                   Icon(
                                     Icons.account_circle,

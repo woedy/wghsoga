@@ -281,9 +281,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             right: 0,
                             child: InkWell(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        const UserProfileScreen()));
+                                        const UserProfileScreen(),
+                                  ),
+                                );
                               },
                               child: Container(
                                 height: 60,
@@ -291,10 +294,15 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   image: DecorationImage(
-                                    image: NetworkImage(hostName + user_photo),
+                                    image: user_photo != null
+                                        ? NetworkImage(hostName + user_photo)
+                                        : AssetImage(
+                                                'assets/images/default_profile_image.png')
+                                            as ImageProvider,
                                     fit: BoxFit.cover,
                                   ),
-                                  borderRadius: BorderRadius.circular(500),
+                                  borderRadius: BorderRadius.circular(
+                                      30), // Adjust borderRadius to be proportional to the height and width
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black.withOpacity(0.2),
@@ -306,7 +314,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 ),
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),

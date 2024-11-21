@@ -40,6 +40,7 @@ Future<RegisterUserModel> register_user(data) async {
 
       await saveIDApiKey(result['data']['token'].toString());
       await saveUserID(result['data']['user_id'].toString());
+      
 
       await saveUserData(result['data']);
 

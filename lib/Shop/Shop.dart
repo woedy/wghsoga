@@ -271,6 +271,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                         children: [
                                           Text(
                                             allProducts[index].name ?? '',
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               height: 1,
                                               color: wesWhite,

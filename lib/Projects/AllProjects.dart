@@ -294,9 +294,9 @@ class _AllProjectsScreenState extends State<AllProjectsScreen> {
                                               image: DecorationImage(
                                                 image: NetworkImage(
                                                   hostName +
-                                                      '/media/' +
                                                       allProjects[index]
-                                                          .projectImages![0],
+                                                          .projectImage
+                                                          .toString(),
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),

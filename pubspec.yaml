@@ -42,6 +42,8 @@ dependencies:
   intl:
   image_picker:
   image_cropper:
+  flutter_launcher_icons:
+
 
 
 

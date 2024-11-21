@@ -51,7 +51,7 @@ class Data {
 
 class Events {
   int? id;
-  List<String>? eventImages;
+  String? eventImage;
   String? eventId;
   String? title;
   String? theme;
@@ -65,10 +65,11 @@ class Events {
   bool? active;
   String? createdAt;
   String? updatedAt;
+  List<Null>? attendees;
 
   Events(
       {this.id,
-      this.eventImages,
+      this.eventImage,
       this.eventId,
       this.title,
       this.theme,
@@ -82,11 +83,11 @@ class Events {
       this.active,
       this.createdAt,
       this.updatedAt,
-    });
+      this.attendees});
 
   Events.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    eventImages = json['event_images'].cast<String>();
+    eventImage = json['event_image'];
     eventId = json['event_id'];
     title = json['title'];
     theme = json['theme'];
@@ -100,13 +101,12 @@ class Events {
     active = json['active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['event_images'] = this.eventImages;
+    data['event_image'] = this.eventImage;
     data['event_id'] = this.eventId;
     data['title'] = this.title;
     data['theme'] = this.theme;
@@ -128,8 +128,8 @@ class Events {
 class Pagination {
   int? pageNumber;
   int? totalPages;
-  Null? next;
-  Null? previous;
+  int? next;
+  int? previous;
 
   Pagination({this.pageNumber, this.totalPages, this.next, this.previous});
 

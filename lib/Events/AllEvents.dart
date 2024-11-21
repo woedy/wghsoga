@@ -27,8 +27,7 @@ Future<AllEventsModel> get_all_events(
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
-      'Authorization':
-          'Token $token', //+ token.toString()
+      'Authorization': 'Token $token', //+ token.toString()
       //'Authorization': 'Token '  + token.toString()
     },
   );
@@ -246,7 +245,11 @@ class _AllEventsState extends State<AllEvents> {
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
                                                     image: DecorationImage(
-                                                      image: NetworkImage(hostName + '/media/' + allEvents[index].eventImages![0]),
+                                                      image: NetworkImage(
+                                                          hostName +
+                                                              allEvents[index]
+                                                                  .eventImage
+                                                                  .toString()),
                                                       fit: BoxFit.cover,
                                                     ),
                                                     borderRadius:

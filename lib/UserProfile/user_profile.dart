@@ -940,6 +940,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ],
                         ),
                       ),
+                      InkWell(
+                        onTap: () {
+                          logout(context);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(color: wesYellow),
+                          child: Center(
+                            child: Text(
+                              'Logout',
+                              style: TextStyle(fontSize: 15, color: wesGreen),
+                            ),
+                          ),
+                        ),
+                      ),
                       bottomNavigator()
                     ],
                   ),
